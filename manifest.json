@@ -1,6 +1,6 @@
 ﻿{
     "name":"FreeImageZoom",
-    "version":"0.0.01",
+    "version":"0.0.1",
     "description":"__MSG_extDescription__",
     "manifest_version":2,
     "icons":{
