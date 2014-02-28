@@ -3,9 +3,9 @@ FreeImageZoom
 
 Fork of hoverfree which is a fork of hoverzoom.net -- this Chrome extension will show an image if you hover its thumbnail or a link.
 
-Read why here: https://gist.github.com/ralph-tice/5087704 or see http://www.reddit.com/r/technology/comments/19oy0s/hoverzoom_has_gone_evil_tracking_browsing_history/ for discussion.
+Read why here: http://goo.gl/g1Qi1k or see http://goo.gl/apOKxa for discussion.
 
-HoverFree is no deprecated and the developer highly recommends you try out http://my.opera.com/Deathamns/blog/opera-extension-imagus as he's decided to discontinue support for HoverFree.
+HoverFree is now deprecated and the developer highly recommends you try out http://my.opera.com/Deathamns/blog/opera-extension-imagus as he's decided to discontinue support for HoverFree.
 
 
 Philosophy:
