@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013 Romain Vallet <romain.vallet@gmail.com>
+﻿// Copyright (c) 2014 Romain Vallet <romain.vallet@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 // True if the current version of the extension has something to show in an update notification
@@ -25,56 +25,56 @@ function ajaxRequest(request, callback) {
     xhr.send(request.data);
 }
 
-function onRequest(request, sender, callback) {
-    switch (request.action) {
+function onMessage(message, sender, callback) {
+    switch (message.action) {
         case 'ajaxGet':
-            ajaxRequest({url:request.url, method:'GET'}, callback);
-            break;
+            ajaxRequest({url:message.url, method:'GET'}, callback);
+            return true;
         case 'ajaxRequest':
-            ajaxRequest(request, callback);
-            break;
+            ajaxRequest(message, callback);
+            return true;
         case 'showPageAction':
             showPageAction(sender.tab);
             callback();
-            break;
+            return true;
         case 'addUrlToHistory':
-            chrome.history.addUrl({url:request.url});
+            chrome.history.addUrl({url:message.url});
             break;
         case 'getOptions':
             callback(options);
-            break;
+            return true;
         case 'setOption':
-            options[request.name] = request.value;
+            options[message.name] = message.value;
             localStorage.options = JSON.stringify(options);
-            sendOptions(request.options);
+            sendOptions(message.options);
             break;
         case 'optionsChanged':
-            options = request.options;
+            options = message.options;
             break;
         case 'saveOptions':
-            localStorage.options = JSON.stringify(request.options);
-            sendOptions(request.options);
+            localStorage.options = JSON.stringify(message.options);
+            sendOptions(message.options);
             break;
         case 'setItem':
-            localStorage.setItem(request.id, request.data);
+            localStorage.setItem(message.id, message.data);
             break;
         case 'getItem':
-            callback(localStorage.getItem(request.id));
-            break;
+            callback(localStorage.getItem(message.id));
+            return true;
         case 'removeItem':
-            localStorage.removeItem(request.id);
+            localStorage.removeItem(message.id);
             break;
         case 'openViewWindow':
-            chrome.windows.create(request.createData, function (window) {
+            chrome.windows.create(message.createData, function (window) {
                 chrome.tabs.executeScript(window.tabs[0].id, {file:'js/viewWindow.js'});
             });
             break;
         case 'openViewTab':
             chrome.tabs.getSelected(null, function (currentTab) {
-                request.createData.index = currentTab.index;
-                if (!request.createData.active)
-                    request.createData.index++;
-                chrome.tabs.create(request.createData, function (tab) {
+                message.createData.index = currentTab.index;
+                if (!message.createData.active)
+                    message.createData.index++;
+                chrome.tabs.create(message.createData, function (tab) {
                     chrome.tabs.executeScript(tab.id, {file:'js/viewTab.js'});
                 });
             });
@@ -110,7 +110,7 @@ function init() {
     options = loadOptions();
 
     // Bind events
-    chrome.extension.onRequest.addListener(onRequest);
+    chrome.runtime.onMessage.addListener(onMessage);
 
     checkUpdate();
 }

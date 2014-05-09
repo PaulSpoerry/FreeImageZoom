@@ -1,4 +1,6 @@
 ﻿var options,
+    VK_CTRL = 1024,
+    VK_SHIFT = 2048,
     actionKeys = [
         {
             id:'actionKey',
@@ -32,12 +34,12 @@
         },
         {
             id:'prevImgKey',
-            title:'View previous image in a galley',
+            title:'View previous image in a gallery',
             description:'Press this key to view the previous image in a gallery.'
         },
         {
             id:'nextImgKey',
-            title:'View next image in a galley',
+            title:'View next image in a gallery',
             description:'Press this key to view the next image in a gallery.'
         }
     ];
@@ -49,12 +51,34 @@ function getMilliseconds(ctrl) {
     return value;
 }
 
+function keyCodeToString(key) {
+    var s = '';
+    if (key & VK_CTRL) {
+        s += 'Ctrl+';
+        key &= ~VK_CTRL;
+    }
+    if (key & VK_SHIFT) {
+        s += 'Shift+';
+        key &= ~VK_SHIFT;
+    }
+    if (key >= 65 && key < 91) {
+        s += String.fromCharCode('A'.charCodeAt(0) + key - 65);
+    } else if (key >= 112 && key < 124) {
+        s += 'F' + (key - 111);
+    }
+    return s;
+}
 function initActionKeys() {
     for (var i = 0; i < actionKeys.length; i++) {
         var key = actionKeys[i];
         $('<tr><td><h2>' + key.title + '</h2><p>' + key.description + '</p></td>' +
             '<td><select id="sel' + key.id + '" class="actionKey"/></td></tr>').appendTo($('#tableActionKeys'));
         loadKeys($('#sel' + key.id));
+        /*$('<tr><td><h2>' + key.title + '</h2><p>' + key.description + '</p></td>' +
+            '<td><input type="text" id="txtKey' + key.id + '" class="actionKey"/></td></tr>').appendTo($('#tableActionKeys'));
+        $('#txtKey' + key.id).keyup(function(e) {
+            e.target.value = keyCodeToString(e.keyCode);
+        });*/
     }
 }
 
@@ -87,6 +111,8 @@ function loadKeys(sel) {
 // Saves options to localStorage.
 function saveOptions() {
     options.extensionEnabled = $('#chkExtensionEnabled')[0].checked;
+    options.zoomVideos = $('#chkZoomVideos')[0].checked;
+    options.muteVideos = $('#chkMuteVideos')[0].checked;
     options.pageActionEnabled = $('#chkPageActionEnabled')[0].checked;
     options.showCaptions = $('#chkShowCaptions')[0].checked;
     options.showHighRes = $('#chkShowHighRes')[0].checked;
@@ -96,11 +122,12 @@ function saveOptions() {
     options.fadeDuration = getMilliseconds($('#txtFadeDuration'));
     options.picturesOpacity = $('#sliderPicturesOpacity').slider('value') / 100;
     options.showWhileLoading = $('#chkShowWhileLoading')[0].checked;
-    //options.expAlwaysFullZoom = $('#chkAlwaysFullZoom')[0].checked;
     options.mouseUnderlap = $('#chkMouseUnderlap')[0].checked;
     options.updateNotifications = $('#chkUpdateNotifications')[0].checked;
     options.filterNSFW = $('#chkFilterNSFW')[0].checked;
     options.enableGalleries = $('#chkEnableGalleries')[0].checked;
+    options.galleriesMouseWheel = $('#chkGalleriesMouseWheel')[0].checked;
+    options.enableStats = $('#chkEnableStats')[0].checked;
 
     for (var i = 0; i < actionKeys.length; i++) {
         options[actionKeys[i].id] = parseInt($('#sel' + actionKeys[i].id).val());
@@ -125,6 +152,8 @@ function restoreOptions() {
     options = loadOptions();
 
     $('#chkExtensionEnabled')[0].checked = options.extensionEnabled;
+    $('#chkZoomVideos')[0].checked = options.zoomVideos;
+    $('#chkMuteVideos')[0].checked = options.muteVideos;
     $('#chkPageActionEnabled')[0].checked = options.pageActionEnabled;
     $('#chkShowCaptions')[0].checked = options.showCaptions;
     $('#chkShowHighRes')[0].checked = options.showHighRes;
@@ -133,14 +162,16 @@ function restoreOptions() {
     $('#txtDisplayDelay').val((options.displayDelay || 0) / 1000);
     $('#txtFadeDuration').val((options.fadeDuration || 0) / 1000);
     $('#chkShowWhileLoading')[0].checked = options.showWhileLoading;
-    //$('#chkAlwaysFullZoom')[0].checked = options.expAlwaysFullZoom;
     $('#chkMouseUnderlap')[0].checked = options.mouseUnderlap;
     $('#chkUpdateNotifications')[0].checked = options.updateNotifications;
     $('#chkFilterNSFW')[0].checked = options.filterNSFW;
     $('#chkEnableGalleries')[0].checked = options.enableGalleries;
+    $('#chkGalleriesMouseWheel')[0].checked = options.galleriesMouseWheel;
+    $('#chkEnableStats')[0].checked = options.enableStats;
 
     for (var i = 0; i < actionKeys.length; i++) {
         $('#sel' + actionKeys[i].id).val(options[actionKeys[i].id]);
+        //$('#txtKey' + actionKeys[i].id).val(keyCodeToString(options[actionKeys[i].id]));
     }
 
     $('#txtPicturesOpacity').val(options.picturesOpacity * 100);
@@ -152,6 +183,8 @@ function restoreOptions() {
     }
     $('#chkWhiteListMode')[0].checked = options.whiteListMode;
 
+    chkZoomVideosOnChange();
+    chkGalleriesMouseWheelOnChange();
     enableControls(false);
 }
 
@@ -207,20 +240,36 @@ function enableControls(enabled) {
     $('#buttons').find('button').attr('disabled', !enabled);
 }
 
-function onRequest(request, sender, callback) {
-    switch (request.action) {
+function onMessage(message, sender, callback) {
+    switch (message.action) {
         case 'optionsChanged':
             restoreOptions();
             break;
     }
 }
 
+function chkZoomVideosOnChange() {
+    if (ge('chkZoomVideos').checked) {
+      $('#pMuteVideos').show();
+    } else {
+      $('#pMuteVideos').hide();
+    }
+}
+function chkEnableGalleriesOnChange() {
+    if (ge('chkEnableGalleries').checked) {
+      $('#pGalleriesMouseWheel').show();
+    } else {
+      $('#pGalleriesMouseWheel').hide();
+    }
+}
 $(function () {
     initActionKeys();
     $('input, select, textarea').change(enableControls).keydown(enableControls);
     $('#btnSave').click(saveOptions);
     $('#btnReset').click(restoreOptions);
+    $('#chkZoomVideos').change(chkZoomVideosOnChange);
     $('#chkWhiteListMode').change(chkWhiteListModeOnChange);
+    $('#chkEnableGalleries').change(chkEnableGalleriesOnChange);
     $('#tabs').tabs({ selected:(location.hash != '') ? parseInt(location.hash.substr(1)) : 0 });
     $('#sliderPicturesOpacity').slider({
         range:'min',
@@ -238,6 +287,6 @@ $(function () {
     $('#btnClearExcludedSites').click(btnClearExcludedSitesOnClick);
     $('#aShowUpdateNotification').click(showUpdateNotification);
     restoreOptions();
-    chrome.extension.onRequest.addListener(onRequest);
+    chrome.runtime.onMessage.addListener(onMessage);
     $('#versionNumber').text(chrome.app.getDetails().version);
 });

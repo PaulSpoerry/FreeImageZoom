@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Romain Vallet <romain.vallet@gmail.com>
+// Copyright (c) 2014 Romain Vallet <romain.vallet@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 // Load options from local storage
@@ -11,6 +11,8 @@ function loadOptions() {
     options = JSON.parse(localStorage.options);
 
     options.extensionEnabled = options.hasOwnProperty('extensionEnabled') ? options.extensionEnabled : true;
+    options.zoomVideos = options.hasOwnProperty('zoomVideos') ? options.zoomVideos : true;
+    options.muteVideos = options.hasOwnProperty('muteVideos') ? options.muteVideos : true;
     options.pageActionEnabled = options.hasOwnProperty('pageActionEnabled') ? options.pageActionEnabled : true;
     options.showCaptions = options.hasOwnProperty('showCaptions') ? options.showCaptions : true;
     options.showHighRes = options.hasOwnProperty('showHighRes') ? options.showHighRes : false;
@@ -22,12 +24,13 @@ function loadOptions() {
     options.whiteListMode = options.hasOwnProperty('whiteListMode') ? options.whiteListMode : false;
     options.picturesOpacity = options.hasOwnProperty('picturesOpacity') ? options.picturesOpacity : 1;
     options.showWhileLoading = options.hasOwnProperty('showWhileLoading') ? options.showWhileLoading : true;
-    //options.expAlwaysFullZoom = options.hasOwnProperty('expAlwaysFullZoom') ? options.expAlwaysFullZoom : false;
     options.mouseUnderlap = options.hasOwnProperty('mouseUnderlap') ? options.mouseUnderlap : true;
     options.updateNotifications = options.hasOwnProperty('updateNotifications') ? options.updateNotifications : true;
     options.enableAds = options.hasOwnProperty('enableAds') ? options.enableAds : 0;
     options.filterNSFW = options.hasOwnProperty('filterNSFW') ? options.filterNSFW : false;
     options.enableGalleries = options.hasOwnProperty('enableGalleries') ? options.enableGalleries : true;
+    options.galleriesMouseWheel = options.hasOwnProperty('galleriesMouseWheel') ? options.galleriesMouseWheel : true;
+    options.enableStats = options.hasOwnProperty('enableStats') ? options.enableStats : true;
 
     // Action keys
     options.actionKey = options.hasOwnProperty('actionKey') ? options.actionKey : 0;
@@ -53,14 +56,14 @@ function sendOptions(options) {
         for (var i = 0; i < windows.length; i++) {
             chrome.tabs.getAllInWindow(windows[i].id, function (tabs) {
                 for (var j = 0; j < tabs.length; j++) {
-                    chrome.tabs.sendRequest(tabs[j].id, request);
+                    chrome.tabs.sendMessage(tabs[j].id, request);
                 }
             });
         }
     });
 
     // Send options to other extension pages
-    chrome.extension.sendRequest(request);
+    chrome.runtime.sendMessage(request);
 }
 
 // Return true is the url is part of an excluded site
@@ -123,5 +126,18 @@ function keyCodeToKeyName(keyCode) {
 }
 
 function showUpdateNotification() {
-    webkitNotifications.createHTMLNotification(chrome.extension.getURL('html/update-notif.html')).show();
+    if (chrome.notifications) {
+        var notifId = 'HoverZoomUpdate',
+            options = {
+                type: 'list',
+                iconUrl: '/images/icon128.png',
+                title: 'Hover Zoom has been updated',
+                message: '',
+                items: [
+                    { title: "Added support for Outlook.com", message: ""},
+                    { title: "Fixes: Facebook, Google+, Flickr", message: ""}
+                ]
+            };
+        chrome.notifications.create(notifId, options, function(id){});
+    }
 }
