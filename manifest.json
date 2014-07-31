@@ -8,7 +8,7 @@
       "matches": [ "\u003Call_urls>" ]
    }, {
       "all_frames": true,
-      "js": [ "plugins/imgur_a.js", "plugins/flickr_a.js", "plugins/tumblr_a.js", "plugins/picasa_a.js", "plugins/imageshack_a.js", "plugins/mediawiki_a.js", "plugins/wordpress_a.js", "plugins/vbulletin_a.js", "plugins/photoshop_a.js", "plugins/instagram_a.js", "plugins/deviantart_a.js", "plugins/youtube_a.js", "plugins/gravatar_a.js", "plugins/ipboard_a.js" ],
+      "js": [ "plugins/imgur_a.js", "plugins/flickr_a.js", "plugins/tumblr_a.js", "plugins/picasa_a.js", "plugins/imageshack_a.js", "plugins/mediawiki_a.js", "plugins/wordpress_a.js", "plugins/vbulletin_a.js", "plugins/photoshop_a.js", "plugins/instagram_a.js", "plugins/deviantart_a.js", "plugins/youtube_a.js", "plugins/gravatar_a.js", "plugins/gallery_a.js", "plugins/ipboard_a.js" ],
       "matches": [ "\u003Call_urls>" ]
    }, {
       "all_frames": true,
@@ -431,6 +431,9 @@
       "js": [ "plugins/mercadolibre_com_ar.js" ],
       "matches": [ "*://*.mercadolibre.com.ar/*" ]
    }, {
+      "js": [ "plugins/voxmedia.js" ],
+      "matches": [ "*://*.polygon.com/*", "*://*.theverge.com/*" ]
+   }, {
       "all_frames": true,
             "js":["js/hoverzoom.js"],
            "matches": [ "\u003Call_urls>" ]
@@ -456,6 +459,6 @@
    },
    "permissions": [ "tabs", "webRequest", "webRequestBlocking", "*://*/*", "cookies", "history", "notifications", "webNavigation", "unlimitedStorage" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.0.2",
+   "version": "0.0.3",
    "web_accessible_resources": [ "images/loading.gif", "images/wm-gallery.png", "images/icon16.png", "images/white.png", "js/jquery.min.js", "js/jquery-ui.min.js", "js/common.js", "js/options.js", "js/g-plusone.js" ]
 }
