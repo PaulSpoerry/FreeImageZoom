@@ -1323,7 +1323,14 @@ var hoverZoom = {
             }
             var src = getSrc(doc);
             if (src) {
+                if (Array.isArray(src)) {
+                    console.log(src);
+                    link.data().hoverZoomGallerySrc = src;
+                    link.data().hoverZoomGalleryIndex = 0;
+                    link.data().hoverZoomSrc = src[0];
+                } else {
                 link.data().hoverZoomSrc = [src];
+                }
                 link.addClass('hoverZoomLink');
                 hoverZoom.displayPicFromElement(link);
             }
