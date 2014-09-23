@@ -6,6 +6,26 @@ hoverZoomPlugins.push({
     name:'Facebook',
     prepareImgLinks:function (callback) {
 
+        // Profile pictures
+        $('a img[src*="fbcdn-profile"]').each(function() {
+            var img = $(this),
+                link = img.parents('a'),
+                data = img.data();
+            if (data.hoverZoomSrc) {
+                return;
+            }
+            var url = link.attr('href');
+            url = url.replace(/.*facebook\.com\//, '').replace(/.*messages\//, '').replace(/profile\.php\?id=(\d+).*/, '$1').replace(/\?.*/, '');
+            url = 'https://graph.facebook.com/' + url + '/picture';
+            if (options.showHighRes) {
+                url += '?width=10000';
+            } else {
+                url += '?width=800';
+            }
+            data.hoverZoomSrc = [url];
+            img.addClass('hoverZoomLink');
+        });
+    
         $('img[src*="fbcdn"]:not(.spotlight), img[src*="fbexternal"], [style*="fbcdn"]:not([data-reactid]), [style*="fbexternal"]').one('mousemove', function () {
             var img = $(this),
                 data = img.data();

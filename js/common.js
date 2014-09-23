@@ -134,8 +134,7 @@ function showUpdateNotification() {
                 title: 'Hover Zoom has been updated',
                 message: '',
                 items: [
-                    { title: "Support for Twitter galleries and animations", message: ""},
-                    { title: "Fixes for Flickr, Youtube and Bing", message: ""}
+                    { title: "Fix for Facebook profile pictures", message: ""}
                 ]
             };
         chrome.notifications.create(notifId, options, function(id){});
