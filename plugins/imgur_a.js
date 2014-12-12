@@ -27,6 +27,10 @@ hoverZoomPlugins.push({
                 return;
             }
 
+            if (options.zoomVideos && (href.substr(-3) == 'gif' || href.substr(-4) == 'gifv')) {
+                data.hoverZoomSrc = [href.replace(/\.gif.?/, '.mp4'), href];
+                res.push(link);
+            } else {
             var matches = href.match(/(?:\/(a|gallery|signin))?\/([^\W_]{5,7})(?:\/|\.[a-zA-Z]+|#([^\W_]{5,7}|\d+))?$/);
             if (matches && matches[2]) {
 
@@ -47,7 +51,7 @@ hoverZoomPlugins.push({
                             data.hoverZoomGallerySrc = [];
                             data.hoverZoomGalleryCaption = [];
 
-                            var albumUrl = 'http://api.imgur.com/2/album/' + hash + '.json';
+                                var albumUrl = 'https://api.imgur.com/2/album/' + hash + '.json';
                             $.get(albumUrl, function (imgur) {
                                 if (imgur.error) {
                                     data.hoverZoomSrc = createUrls(hash);
@@ -89,6 +93,7 @@ hoverZoomPlugins.push({
                         res.push(link);
                 }
             }
+        }
         }
 
         // Every sites

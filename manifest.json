@@ -407,6 +407,9 @@
             "js":[ "plugins/wallbase_cc.js" ],
             "matches":[ "*://*.wallbase.cc/*" ]
    }, {
+      "js": [ "plugins/wallhaven_cc.js" ],
+      "matches": [ "*://*.wallhaven.cc/*" ]
+   }, {
             "js":[ "plugins/bluray.js" ],
             "matches":[ "*://*.blu-ray.com/*" ]
    }, {
@@ -459,6 +462,6 @@
    },
    "permissions": [ "tabs", "webRequest", "webRequestBlocking", "*://*/*", "cookies", "history", "notifications", "webNavigation", "unlimitedStorage" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.0.5",
+   "version": "0.0.6",
    "web_accessible_resources": [ "images/loading.gif", "images/wm-gallery.png", "images/icon16.png", "images/white.png", "js/jquery.min.js", "js/jquery-ui.min.js", "js/common.js", "js/options.js", "js/g-plusone.js" ]
 }

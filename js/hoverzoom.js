@@ -336,9 +336,9 @@ var hoverZoom = {
 
             if (links && links.length > 0) {
                 var hoverZoomSrcIndex = links.data().hoverZoomSrcIndex || 0;
-                if (links.data().hoverZoomSrc && links.data().hoverZoomSrc != 'undefined' &&
+                if (links.data().hoverZoomSrc && typeof(links.data().hoverZoomSrc) != 'undefined' &&
                     links.data().hoverZoomSrc[hoverZoomSrcIndex] &&
-                    links.data().hoverZoomSrc[hoverZoomSrcIndex] != 'undefined') {
+                    typeof(links.data().hoverZoomSrc[hoverZoomSrcIndex]) != 'undefined') {
                     // Happens when the mouse goes from an image to another without hovering the page background
                     if (links.data().hoverZoomSrc[hoverZoomSrcIndex] != imgDetails.url) {
                         hideHoverZoomImg();

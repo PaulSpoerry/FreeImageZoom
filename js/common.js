@@ -134,7 +134,8 @@ function showUpdateNotification() {
                 title: 'Hover Zoom has been updated',
                 message: '',
                 items: [
-                    { title: "Fix for Facebook profile pictures", message: ""}
+                    { title: "Imgur gifv support", message: ""},
+                    { title: "Fix for HTTPS Imgur albums", message: ""}
                 ]
             };
         chrome.notifications.create(notifId, options, function(id){});
