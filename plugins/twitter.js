@@ -36,6 +36,10 @@ hoverZoomPlugins.push({
                 res.push(link);
                 link.addClass('hoverZoomLink');
             }
+            
+
+            
+            
         });
 
         $('a:contains("pic.twitter.com/")').one('mouseover', function() {

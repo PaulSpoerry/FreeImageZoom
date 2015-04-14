@@ -15,14 +15,17 @@ hoverZoomPlugins.push({
                 return;
             }
             var url = link.attr('href');
-            url = url.replace(/.*\?u=([^&]*)&.*/, '$1').replace('%2F', '/').replace(/.*facebook\.com\//, '').replace(/.*messages\//, '').replace(/profile\.php\?id=(\d+).*/, '$1').replace(/\?.*/, '');
-            url = 'https://graph.facebook.com/' + url + '/picture';
-            if (url != 'photo.php') {
+          	url = url.replace(/.*\?u=([^&]*)&.*/, '$1').replace('%2F', '/').replace(/.*facebook\.com\//, '').replace(/.*messages\//, '').replace(/profile\.php\?id=(\d+).*/, '$1').replace(/\?.*/, '');
+          	url = 'https://graph.facebook.com/' + url + '/picture';
+          	
+          	if (url != 'photo.php') {
             if (options.showHighRes) {
                 url += '?width=10000';
             } else {
                 url += '?width=800';
             }
+
+
             data.hoverZoomSrc = [url];
               link.addClass('hoverZoomLink');
             }

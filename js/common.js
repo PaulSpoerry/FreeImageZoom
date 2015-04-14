@@ -127,7 +127,7 @@ function keyCodeToKeyName(keyCode) {
 
 function showUpdateNotification() {
     if (chrome.notifications) {
-        var notifId = 'HoverZoomUpdate',
+        var notifId = 'FreeImageZoomUpdate',
             options = {
                 type: 'list',
                 iconUrl: '/images/icon128.png',
