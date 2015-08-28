@@ -1,11 +1,13 @@
-// Copyright (c) 2013 Romain Vallet <romain.vallet@gmail.com>
+// Copyright (c) 2015 Romain Vallet <romain.vallet@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 var hoverZoomPlugins = hoverZoomPlugins || [];
 hoverZoomPlugins.push({
     name:'Twitter',
-    version:'0.2',
     prepareImgLinks:function (callback) {
+		function thumbToLarge(url) {
+			return url.replace(/(\.\w+)(:\w+)?$/, '$1:large');
+		}
         var res = [];
         
         hoverZoom.urlReplace(res,
@@ -20,13 +22,12 @@ hoverZoomPlugins.push({
             ':large'
         );
         
-        $('div video source[video-src*="twimg.com/tweet_video/"]').each(function() {
-            var div = $(this).parents('div:eq(0)'),
-                img = div.find('img[src*="tweet_video_thumb"]');
-            img.data().hoverZoomSrc = [this.getAttribute('video-src')];
-            res.push(img);
-            console.log(this.src);
-        });
+        /*$('video source[video-src*="twimg.com/tweet_video/"]').each(function() {
+            var video = $(this).parents('video:eq(0)');
+            video.data().hoverZoomSrc = [this.getAttribute('video-src')];
+            res.push(video);
+            //console.log(this.src);
+        });*/
         
         $('[data-expanded-url], [data-full-url], [data-url]').each(function () {
             var link = $(this),
@@ -68,6 +69,12 @@ hoverZoomPlugins.push({
             });
         });        
 
+		$('a.media-item').each(function() {
+			var link = $(this),
+				url = this.style.backgroundImage.replace(/url\((.*)\)/, '$1');
+			link.data().hoverZoomSrc = [thumbToLarge(url)];
+			res.push(link);
+		});
         callback($(res));
     }
 });

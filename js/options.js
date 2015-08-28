@@ -184,7 +184,7 @@ function restoreOptions() {
     $('#chkWhiteListMode')[0].checked = options.whiteListMode;
 
     chkZoomVideosOnChange();
-    chkGalleriesMouseWheelOnChange();
+    chkEnableGalleriesOnChange();
     enableControls(false);
 }
 
