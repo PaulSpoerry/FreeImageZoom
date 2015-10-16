@@ -7,26 +7,33 @@ hoverZoomPlugins.push({
     prepareImgLinks:function (callback) {
 
         // Profile pictures
-        $('a[data-hovercard] img[src*="profile"]').each(function() {
+        $('img[src*="profile"]').each(function() {
             var img = $(this),
                 link = img.parents('a'),
-                data = link.data();
-            if (data.hoverZoomSrc) {
-                return;
+                target, id;
+            if (link.attr('data-hovercard')) {
+                id = link.attr('data-hovercard').match(/id=(\d+)/);
+                target = link;
+            } else if (img.attr('data-reactid')) {
+                id = img.attr('data-reactid').match(/\$(\d+)/);
+                target = img.parents('a > div > div');
+            } else if (link.attr('href') && link.attr('href').indexOf('fref=hovercard') > -1) {
+                var urlId = link.attr('href').match(/facebook\.com\/([^\?]*)/);
+                if (urlId && urlId.length) {
+                    var hcLink = $('a[data-hovercard][href*="' + urlId[0] + '"]');
+                    if (hcLink.length > 0) {
+                        id = hcLink.attr('data-hovercard').match(/id=(\d+)/);
             }
-            var url = link.attr('data-hovercard').match(/id=(\d+)/);
-            if (url && url.length > 1) {
-              url = 'https://graph.facebook.com/' + url[1] + '/picture';
+                    target = img;
           	
-            if (options.showHighRes) {
-                url += '?width=10000';
-            } else {
-                url += '?width=800';
+                }
             }
-
-
-            data.hoverZoomSrc = [url];
-              link.addClass('hoverZoomLink');
+            if (id && id.length > 1) {
+                var data = target.data();
+                if (data && !data.hoverZoomSrc) {
+                    data.hoverZoomSrc = ['https://graph.facebook.com/' + id[1] + '/picture?width=' + (options.showHighRes ? '10000' : '800')];
+                    target.addClass('hoverZoomLink');
+                }
             }
         });
     
