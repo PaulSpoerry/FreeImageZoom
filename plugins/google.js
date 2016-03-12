@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Romain Vallet <romain.vallet@gmail.com>
+// Copyright (c) 2013 Romain Vallet <hoverzoom@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 var hoverZoomPlugins = hoverZoomPlugins || [];
@@ -14,7 +14,7 @@ hoverZoomPlugins.push({
         var res = [];
         hoverZoom.urlReplace(res,
             'img[src*=".googleusercontent.com/"], img[src*=".ggpht.com/"]',
-            /(\/|=)(w\d{2,}-h\d{2,}|[hws]\d{2,})(-[npcko]+)*(\/|$)/,
+            /(\/|=)(w\d{2,}-h\d{2,}|[hws]\d{2,})(-[npckorw]+)*(\/|$)/,
             options.showHighRes ? '$1s0$4' : '$1s800$4'
         );        
         /*hoverZoom.urlReplace(res,

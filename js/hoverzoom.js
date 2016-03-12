@@ -133,8 +133,8 @@ var hoverZoom = {
             }
 
             var offset = 20,
-                padding = 10,
-                statusBarHeight = 15,
+                padding = 17,
+                statusBarHeight = 12,
                 wndWidth = window.innerWidth,
                 wndHeight = window.innerHeight,
                 wndScrollLeft = (document.documentElement && document.documentElement.scrollLeft) || document.body.scrollLeft,
@@ -290,12 +290,12 @@ var hoverZoom = {
                 now = true;
             }
             hz.hzImg.stop(true, true).fadeOut(now ? 0 : options.fadeDuration, function () {
+                hz.hzImg.find('video').attr('src', '');
                 hzCaption = null;
                 hz.imgLoading = null;
                 hz.hzImg.empty();
                 restoreTitles();
             });
-            //chrome.runtime.sendMessage({action: 'viewWindow', visible: false});
         }
 
         function documentMouseMove(event) {
@@ -324,12 +324,7 @@ var hoverZoom = {
             if (options.mouseUnderlap && target.length && mousePos && linkRect &&
                 (imgFullSize && imgFullSize.length && target[0] == imgFullSize[0] ||
                     hz.hzImg && hz.hzImg.length && target[0] == hz.hzImg[0])) {
-                /*cLog('Over image. linkRect:');
-                cLog(linkRect);
-                cLog('Over image. mousePos:');
-                cLog(mousePos);*/
                 if (mousePos.top > linkRect.top && mousePos.top < linkRect.bottom && mousePos.left > linkRect.left && mousePos.left < linkRect.right) {
-                    //cLog('Mouse over link');
                     return;
                 }
             }
@@ -349,7 +344,6 @@ var hoverZoom = {
                     // Is the image source has not been set yet
                     if (!imgFullSize) {
                         hz.currentLink = links;
-                        //initLinkRect(hz.currentLink);
                         if (!options.actionKey || actionKeyDown) {
                             imgDetails.url = links.data().hoverZoomSrc[hoverZoomSrcIndex];
                             clearTimeout(loadFullSizeImageTimeout);
@@ -424,7 +418,6 @@ var hoverZoom = {
             // Only the last hovered link gets displayed
             if (imgDetails.url == $(imgFullSize).attr('src')) {
                 loading = false;
-                //imgFullSize.css({'background-image': 'none'});
                 if (hz.imgLoading) {
                     displayFullSizeImage();
                 }
@@ -496,7 +489,7 @@ var hoverZoom = {
                 }
                 if (linkData.hoverZoomGallerySrc) {
                     var info = '';
-                    if (linkData.hoverZoomGallerySrc.length > 0) {
+                    if (linkData.hoverZoomGallerySrc.length > 1) {
                         info = (linkData.hoverZoomGalleryIndex + 1) + '/' + linkData.hoverZoomGallerySrc.length;
                     }
                     hzGallery = $('<div/>', {id:'hzGallery', text:info}).css(hzGalleryInfoCss).appendTo(hz.hzImg);
@@ -1152,6 +1145,37 @@ var hoverZoom = {
             var preloadImg = new Image();
             preloadImg.src = hz.currentLink.data().hoverZoomGallerySrc[index][0];
         }
+        function applyZoomingPatterns(patterns) {
+            var p;
+            try {
+                p = JSON.parse(patterns);
+            } catch(e) {
+                p = false;
+            }
+            if (p && p.zp && p.zp.length) {
+                for (var i=0; i<p.zp.length; i++) {
+                    var res = [], 
+                        zp = p.zp[i],
+                        search = (zp.s.startsWith('/') && zp.s.endsWith('/')) ? new RegExp(zp.s.substr(1,zp.s.length-2)) : zp.s;
+                    hz.urlReplace(res, zp.f, search, zp.r, zp.p);
+                    imgLinksPrepared($(res));
+                }
+            }
+        }
+        function loadZoomingPatterns() {
+            const hzPatterns = 'hz.patterns';
+            if (localStorage.hasOwnProperty(hzPatterns)) {
+                applyZoomingPatterns(localStorage[hzPatterns]);
+            }
+            chrome.runtime.sendMessage({action:'getZoomingPatterns'}, function (result) {
+                if  (result == '{}') {
+                    localStorage.removeItem(hzPatterns);
+                } else if (typeof(result) == 'string' && result.startsWith('{') && result.endsWith('}')) {
+                    localStorage[hzPatterns] = result;
+                    applyZoomingPatterns(result);
+                }
+            });
+        }
 
         function init() {
             if (!window.innerHeight || !window.innerWidth) {
@@ -1162,6 +1186,7 @@ var hoverZoom = {
             body100pct = (body.css('position') != 'static') ||
                 (body.css('padding-left') == '0px' && body.css('padding-right') == '0px' && body.css('margin-left') == '0px' && body.css('margin-right') == '0px');
             hz.pageGenerator = $('meta[name="generator"]').attr('content');
+            loadZoomingPatterns();
             prepareImgLinks();
             bindEvents();
             fixFlash();

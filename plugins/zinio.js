@@ -1,4 +1,4 @@
-// Copyright (c) 2012 Romain Vallet <romain.vallet@gmail.com> and ScienceOrArt <scienceorart.wordpress.com>
+// Copyright (c) 2012 Romain Vallet <hoverzoom@gmail.com> and ScienceOrArt <scienceorart.wordpress.com>
 // Licensed under the MIT license, read license.txt
 
 var hoverZoomPlugins = hoverZoomPlugins || [];

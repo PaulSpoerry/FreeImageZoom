@@ -1,4 +1,4 @@
-// Copyright (c) 2011 Romain Vallet <romain.vallet@gmail.com>, Ben Holland <benholland99@gmail.com>
+// Copyright (c) 2011 Romain Vallet <hoverzoom@gmail.com>, Ben Holland <benholland99@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 var hoverZoomPlugins = hoverZoomPlugins || [];

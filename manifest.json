@@ -437,6 +437,9 @@
       "js": [ "plugins/voxmedia.js" ],
       "matches": [ "*://*.polygon.com/*", "*://*.theverge.com/*" ]
    }, {
+        "js": [ "plugins/olx_pl.js" ],
+	     "matches": [ "*://*.olx.pl/*" ]
+   }, {
       "all_frames": true,
             "js":["js/hoverzoom.js"],
            "matches": [ "\u003Call_urls>" ]
@@ -452,7 +455,7 @@
       "48": "images/icon48.png"
    },
    "manifest_version": 2,
-   "minimum_chrome_version": "18",
+   "minimum_chrome_version": "21",
    "name": "FreeImageZoom",
    "options_page": "html/options.html",
    "page_action": {
@@ -460,8 +463,8 @@
       "default_popup": "html/popup.html",
       "default_title": "FreeImageZoom"
    },
-   "permissions": [ "tabs", "webRequest", "webRequestBlocking", "*://*/*", "cookies", "history", "notifications", "webNavigation", "unlimitedStorage" ],
+   "permissions": [ "tabs", "webRequest", "webRequestBlocking", "*://*/*", "cookies", "history", "notifications", "webNavigation", "storage", "unlimitedStorage" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.0.9",
+   "version": "0.0.10",
    "web_accessible_resources": [ "images/loading.gif", "images/wm-gallery.png", "images/icon16.png", "images/white.png", "js/jquery.min.js", "js/jquery-ui.min.js", "js/common.js", "js/options.js", "js/g-plusone.js" ]
 }

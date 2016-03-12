@@ -1,4 +1,4 @@
-// Copyright (c) 2011 Dave Disser <disser@gmail.com>, Romain Vallet <romain.vallet@gmail.com>
+// Copyright (c) 2011 Dave Disser <disser@gmail.com>, Romain Vallet <hoverzoom@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 var hoverZoomPlugins = hoverZoomPlugins || [];

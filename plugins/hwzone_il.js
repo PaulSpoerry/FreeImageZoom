@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2011 Yoav Vainrich <yoavain@gmail.com> and Romain Vallet <romain.vallet@gmail.com>
+﻿// Copyright (c) 2011 Yoav Vainrich <yoavain@gmail.com> and Romain Vallet <hoverzoom@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 var hoverZoomPlugins = hoverZoomPlugins || [];

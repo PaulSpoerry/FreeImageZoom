@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Romain Vallet <romain.vallet@gmail.com>
+// Copyright (c) 2016 Romain Vallet <hoverzoom@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 var hoverZoomPlugins = hoverZoomPlugins || [];
@@ -6,43 +6,12 @@ hoverZoomPlugins.push({
     name:'Facebook',
     prepareImgLinks:function (callback) {
 
-        // Profile pictures
-        $('img[src*="profile"]').each(function() {
+        $('img[src*="fbcdn"]:not(.spotlight), img[src*="fbexternal"], [style*="fbcdn"]:not([data-reactid]), [style*="fbexternal"]').each(function () {
             var img = $(this),
                 link = img.parents('a'),
-                target, id;
-            if (link.attr('data-hovercard')) {
-                id = link.attr('data-hovercard').match(/id=(\d+)/);
-                target = link;
-            } else if (img.attr('data-reactid')) {
-                id = img.attr('data-reactid').match(/\$(\d+)/);
-                target = img.parents('a > div > div');
-            } else if (link.attr('href') && link.attr('href').indexOf('fref=hovercard') > -1) {
-                var urlId = link.attr('href').match(/facebook\.com\/([^\?]*)/);
-                if (urlId && urlId.length) {
-                    var hcLink = $('a[data-hovercard][href*="' + urlId[0] + '"]');
-                    if (hcLink.length > 0) {
-                        id = hcLink.attr('data-hovercard').match(/id=(\d+)/);
-            }
-                    target = img;
-          	
-                }
-            }
-            if (id && id.length > 1) {
-                var data = target.data();
-                if (data && !data.hoverZoomSrc) {
-                    data.hoverZoomSrc = ['https://graph.facebook.com/' + id[1] + '/picture?width=' + (options.showHighRes ? '10000' : '800')];
-                    target.addClass('hoverZoomLink');
-                }
-            }
-        });
-    
-        $('img[src*="fbcdn"]:not(.spotlight), img[src*="fbexternal"], [style*="fbcdn"]:not([data-reactid]), [style*="fbexternal"]').one('mousemove', function () {
-            var img = $(this),
-                data = img.data();
-            if (data.hoverZoomSrc) {
-                return;
-            }
+                data = link.data();
+            if (!data || data.hoverZoomSrc || link.hasClass('UFICommentLink') || link.hasClass('messagesContent') || link.attr('href').indexOf('notif') != -1) return;
+
             var src = hoverZoom.getThumbUrl(this),
                 origSrc = src;
             if (src.indexOf('safe_image.php') > -1) {
@@ -62,18 +31,21 @@ hoverZoomPlugins.push({
                     src = src.replace(/\/(\d|(hq)?default)\.jpg/, '/0.jpg');
                 }
             } else {
-                src = src.replace(/[a-z]\d+\.(facebook\.com|sphotos\.ak\.fbcdn\.net)\//, 'fbcdn-sphotos-a.akamaihd.net/').replace(/\/[a-z]\d+(\.\d+)+\//, '/').replace(/\/[a-z]\d+x\d+\//, '/').replace(/_[sqta]\./, '_n.').replace(/\/[sqta](\d)/, '/n$1');
-            }
-            
-            data.hoverZoomSrc = [src];
-            if (origSrc != src || (this.style.top && parseInt(this.style.top) < 0)) {
-                img.addClass('hoverZoomLink');
-
-                var caption = getTooltip(img.parents('a:eq(0)'));
-                if (caption) {
-                    data.hoverZoomCaption = caption;
+                var reg = src.match(/\d+_(\d+)_\d+/);
+                if (reg) {
+                    src = 'https://www.facebook.com/photo/download/?fbid=' + reg[1];
                 }
             }
+
+            data.hoverZoomSrc = [src];
+            link.addClass('hoverZoomLink');
+        });
+
+        $('a[href*="/photo.php"]').one('mouseover', function () {
+            var link = $(this);
+            var url = link.attr('href').replace('photo.php', 'photo/download/');
+            link.data().hoverZoomSrc = [url];
+            link.addClass('hoverZoomLink');
         });
 
         $('a[ajaxify*="src="]:not(.coverWrap)').one('mouseover', function () {

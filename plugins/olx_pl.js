@@ -1,15 +1,15 @@
-﻿// Copyright (c) 2013 Romain Vallet <hoverzoom@gmail.com>
+﻿// Copyright (c) 2015 Romain Vallet <hoverzoom@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 var hoverZoomPlugins = hoverZoomPlugins || [];
 hoverZoomPlugins.push({
-    name:'MemeDad',
+    name:'Olx.pl',
     prepareImgLinks:function (callback) {
         var res = [];
         hoverZoom.urlReplace(res,
-            'a[href*="memedad.com/meme/"]',
-            /\/meme\/(\d+)/,
-            '/memes/$1.jpg'
+            'a.thumb img',
+            /_\d+x\d+_/,
+            '_1000x700_'
         );
         callback($(res));
     }
