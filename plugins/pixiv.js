@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2013 Romain Vallet <hoverzoom@gmail.com>
+﻿// Copyright (c) 2013 Romain Vallet <romain.vallet@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 var hoverZoomPlugins = hoverZoomPlugins || [];
@@ -14,6 +14,7 @@ hoverZoomPlugins.push({
         }
         hoverZoom.urlReplace(res, 'a img[src*="pixiv.net/profile/"]', search, ['.', '/']);
         callback($(res));
+
         $('a[href*="member_illust.php"]').on('mouseover', function() {
             var link = $(this);
             if (link.data().hoverZoomSrc) return;

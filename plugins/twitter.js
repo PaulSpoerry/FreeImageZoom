@@ -1,4 +1,5 @@
-// Copyright (c) 2015 Romain Vallet <hoverzoom@gmail.com>
+// Copyright (c) 2015 Romain Vallet <romain.vallet@gmail.com>
+// Copyright (c) 2016 Oleg Anashkin <oleg.anashkin@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 var hoverZoomPlugins = hoverZoomPlugins || [];

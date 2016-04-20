@@ -1,48 +1,7 @@
-﻿var options,
+var options,
     VK_CTRL = 1024,
     VK_SHIFT = 2048,
-    actionKeys = [
-        {
-            id:'actionKey',
-            title:'Activate FreeImageZoom',
-            description:'If a key is set, FreeImageZoom will be active only when this key is held down.'
-        },
-        {
-            id:'hideKey',
-            title:'Disable FreeImageZoom',
-            description:'Holding this key down hides the zoomed picture. Use it when the picture hides elements that are also displayed on mouseover.'
-        },
-        {
-            id:'openImageInWindowKey',
-            title:'Open image in a new window',
-            description:'Press this key to open the image you are currently viewing in a new window. Press this key again to close the window.'
-        },
-        {
-            id:'openImageInTabKey',
-            title:'Open image in a new tab',
-            description:'Press this key to open the image you are currently viewing in a new tab. Press this key again to close the tab. Shift+key opens the image in a background tab.'
-        },
-        {
-            id:'saveImageKey',
-            title:'Save image',
-            description:'Press this key to save the image you are currently viewing.'
-        },
-        {
-            id:'fullZoomKey',
-            title:'Activate full zoom',
-            description:'When this key is held down, the picture is displayed using all available space. Useful for high resolution pictures only.'
-        },
-        {
-            id:'prevImgKey',
-            title:'View previous image in a gallery',
-            description:'Press this key to view the previous image in a gallery.'
-        },
-        {
-            id:'nextImgKey',
-            title:'View next image in a gallery',
-            description:'Press this key to view the next image in a gallery.'
-        }
-    ];
+    actionKeys = ['actionKey', 'hideKey', 'openImageInWindowKey', 'openImageInTabKey', 'saveImageKey', 'fullZoomKey', 'prevImgKey', 'nextImgKey'];
 
 function getMilliseconds(ctrl) {
     var value = parseFloat(ctrl.val());
@@ -68,23 +27,21 @@ function keyCodeToString(key) {
     }
     return s;
 }
+
 function initActionKeys() {
-    for (var i = 0; i < actionKeys.length; i++) {
-        var key = actionKeys[i];
-        $('<tr><td><h2>' + key.title + '</h2><p>' + key.description + '</p></td>' +
-            '<td><select id="sel' + key.id + '" class="actionKey"/></td></tr>').appendTo($('#tableActionKeys'));
-        loadKeys($('#sel' + key.id));
-        /*$('<tr><td><h2>' + key.title + '</h2><p>' + key.description + '</p></td>' +
-            '<td><input type="text" id="txtKey' + key.id + '" class="actionKey"/></td></tr>').appendTo($('#tableActionKeys'));
-        $('#txtKey' + key.id).keyup(function(e) {
-            e.target.value = keyCodeToString(e.keyCode);
-        });*/
-    }
+    actionKeys.forEach(function(key) {
+        var id = key[0].toUpperCase() + key.substr(1);
+        var title = chrome.i18n.getMessage("opt" + id + "Title");
+        var description = chrome.i18n.getMessage("opt" + id + "Description");
+        $('<tr><td>' + title + '<p>' + description + '</p></td>' +
+            '<td><select id="sel' + id + '" class="actionKey"/></td></tr>').appendTo($('#tableActionKeys'));
+        loadKeys($('#sel' + id));
+    });
 }
 
 function loadKeys(sel) {
     $('<option value="0">None</option>').appendTo(sel);
-    if (sel.attr('id') != 'selopenImageInTabKey')
+    if (sel.attr('id') != 'selOpenImageInTabKey')
         $('<option value="16">Shift</option>').appendTo(sel);
     $('<option value="17">Ctrl</option>').appendTo(sel);
     if (navigator.appVersion.indexOf('Macintosh') > -1) {
@@ -109,42 +66,46 @@ function loadKeys(sel) {
 }
 
 // Saves options to localStorage.
+// TODO: Migrate to https://developer.chrome.com/extensions/storage
 function saveOptions() {
     options.extensionEnabled = $('#chkExtensionEnabled')[0].checked;
     options.zoomVideos = $('#chkZoomVideos')[0].checked;
     options.muteVideos = $('#chkMuteVideos')[0].checked;
+    options.videoVolume = $('#txtVideoVolume')[0].value / 100;
+    options.mouseUnderlap = $('#chkMouseUnderlap')[0].checked;
     options.pageActionEnabled = $('#chkPageActionEnabled')[0].checked;
     options.showCaptions = $('#chkShowCaptions')[0].checked;
-    options.showHighRes = $('#chkShowHighRes')[0].checked;
-    options.addToHistory = $('#chkAddToHistory')[0].checked;
-    options.alwaysPreload = $('#chkAlwaysPreload')[0].checked;
-    options.displayDelay = getMilliseconds($('#txtDisplayDelay'));
-    options.fadeDuration = getMilliseconds($('#txtFadeDuration'));
-    options.picturesOpacity = $('#sliderPicturesOpacity').slider('value') / 100;
     options.showWhileLoading = $('#chkShowWhileLoading')[0].checked;
-    options.mouseUnderlap = $('#chkMouseUnderlap')[0].checked;
-    options.updateNotifications = $('#chkUpdateNotifications')[0].checked;
-    options.filterNSFW = $('#chkFilterNSFW')[0].checked;
-    options.enableGalleries = $('#chkEnableGalleries')[0].checked;
+    options.showHighRes = $('#chkShowHighRes')[0].checked;
     options.galleriesMouseWheel = $('#chkGalleriesMouseWheel')[0].checked;
-    options.enableStats = $('#chkEnableStats')[0].checked;
+    options.displayDelay = getMilliseconds($('#txtDisplayDelay'));
+    options.displayDelayVideo = getMilliseconds($('#txtDisplayDelayVideo'));
+    options.fadeDuration = getMilliseconds($('#txtFadeDuration'));
+    options.ambilightEnabled = $('#chkAmbilightEnabled')[0].checked;
 
-    for (var i = 0; i < actionKeys.length; i++) {
-        options[actionKeys[i].id] = parseInt($('#sel' + actionKeys[i].id).val());
-    }
-
-    // Excluded sites
+    options.whiteListMode = $('#chkWhiteListMode')[0].checked;
     options.excludedSites = [];
-    $('#selExcludedSites').find('option').each(function () {
+    $('#selExcludedSites').find('span').each(function () {
         options.excludedSites.push($(this).text());
     });
-    options.whiteListMode = $('#chkWhiteListMode')[0].checked;
+
+    actionKeys.forEach(function(key) {
+        var id = key[0].toUpperCase() + key.substr(1);
+        options[key] = parseInt($('#sel' + id).val());
+    });
+
+    options.updateNotifications = $('#chkUpdateNotifications')[0].checked;
+    options.addToHistory = $('#chkAddToHistory')[0].checked;
+    options.filterNSFW = $('#chkFilterNSFW')[0].checked;
+    options.alwaysPreload = $('#chkAlwaysPreload')[0].checked;
+    options.enableGalleries = $('#chkEnableGalleries')[0].checked;
+    options.picturesOpacity = $('#txtPicturesOpacity')[0].value / 100;
 
     localStorage.options = JSON.stringify(options);
-    enableControls(false);
     sendOptions(options);
     restoreOptions();
-    $('#saved').clearQueue().fadeIn(100).delay(5000).fadeOut(600);
+    $('#messages').clearQueue().animate({opacity:1}, 500).delay(5000).animate({opacity:0}, 500);
+    return false;
 }
 
 // Restores options from localStorage.
@@ -154,55 +115,56 @@ function restoreOptions() {
     $('#chkExtensionEnabled')[0].checked = options.extensionEnabled;
     $('#chkZoomVideos')[0].checked = options.zoomVideos;
     $('#chkMuteVideos')[0].checked = options.muteVideos;
+    $('#txtVideoVolume').val(options.videoVolume * 100);
+    $('#chkMouseUnderlap')[0].checked = options.mouseUnderlap;
     $('#chkPageActionEnabled')[0].checked = options.pageActionEnabled;
     $('#chkShowCaptions')[0].checked = options.showCaptions;
-    $('#chkShowHighRes')[0].checked = options.showHighRes;
-    $('#chkAddToHistory')[0].checked = options.addToHistory;
-    $('#chkAlwaysPreload')[0].checked = options.alwaysPreload;
-    $('#txtDisplayDelay').val((options.displayDelay || 0) / 1000);
-    $('#txtFadeDuration').val((options.fadeDuration || 0) / 1000);
     $('#chkShowWhileLoading')[0].checked = options.showWhileLoading;
-    $('#chkMouseUnderlap')[0].checked = options.mouseUnderlap;
-    $('#chkUpdateNotifications')[0].checked = options.updateNotifications;
-    $('#chkFilterNSFW')[0].checked = options.filterNSFW;
-    $('#chkEnableGalleries')[0].checked = options.enableGalleries;
+    $('#chkShowHighRes')[0].checked = options.showHighRes;
     $('#chkGalleriesMouseWheel')[0].checked = options.galleriesMouseWheel;
-    $('#chkEnableStats')[0].checked = options.enableStats;
+    $('#txtDisplayDelay').val((options.displayDelay || 0) / 1000);
+    $('#txtDisplayDelayVideo').val((options.displayDelayVideo || 0) / 1000);
+    $('#txtFadeDuration').val((options.fadeDuration || 0) / 1000);
+    $('#chkAmbilightEnabled')[0].checked = options.ambilightEnabled;
 
-    for (var i = 0; i < actionKeys.length; i++) {
-        $('#sel' + actionKeys[i].id).val(options[actionKeys[i].id]);
-        //$('#txtKey' + actionKeys[i].id).val(keyCodeToString(options[actionKeys[i].id]));
-    }
-
-    $('#txtPicturesOpacity').val(options.picturesOpacity * 100);
-    $('#sliderPicturesOpacity').slider('value', options.picturesOpacity * 100);
-
+    $('#chkWhiteListMode')[0].checked = options.whiteListMode;
     $('#selExcludedSites').empty();
     for (var i = 0; i < options.excludedSites.length; i++) {
-        $('<option>' + options.excludedSites[i] + '</option>').appendTo('#selExcludedSites');
+        appendExcludedSite(options.excludedSites[i]);
     }
-    $('#chkWhiteListMode')[0].checked = options.whiteListMode;
 
-    chkZoomVideosOnChange();
-    chkEnableGalleriesOnChange();
-    enableControls(false);
+    actionKeys.forEach(function(key) {
+        var id = key[0].toUpperCase() + key.substr(1);
+        $('#sel' + id).val(options[key]);
+    });
+
+    $('#chkUpdateNotifications')[0].checked = options.updateNotifications;
+    $('#chkAddToHistory')[0].checked = options.addToHistory;
+    $('#chkFilterNSFW')[0].checked = options.filterNSFW;
+
+    $('#chkAlwaysPreload')[0].checked = options.alwaysPreload;
+    $('#chkEnableGalleries')[0].checked = options.enableGalleries;
+    $('#txtPicturesOpacity').val(options.picturesOpacity * 100);
+
+    $('input:checked').trigger('gumby.check');
+    return false;
 }
 
 function btnAddExcludedSiteOnClick() {
-    var site = $('#txtAddExcludedSite').val().trim().toLowerCase().replace(/.*:\/\//, '');
-    if (site)
-        $('<option>' + site + '</option>').appendTo('#selExcludedSites');
-    $('#txtAddExcludedSite').val('').focus();
+    var field = $('#txtAddExcludedSite');
+    var site = field.val().trim().toLowerCase().replace(/.*:\/\//, '');
+    if (site) appendExcludedSite(site);
+    field.val('').focus();
+    return false;
+}
+
+function appendExcludedSite(site) {
+    $('<li><a href="#"><i class="icon-cancel"></i></a> <span>' + site + '</span></li>').appendTo('#selExcludedSites').find('a').on('click', btnRemoveExcludedSiteOnClick);
 }
 
 function btnRemoveExcludedSiteOnClick() {
-    $('#selExcludedSites').find('option:selected').remove();
-}
-
-function btnClearExcludedSitesOnClick() {
-    if (confirm('This will remove all sites from the list.\nContinue?')) {
-        $('#selExcludedSites').find('option').remove();
-    }
+    $(this).parent().remove();
+    return false;
 }
 
 function selKeyOnChange(event) {
@@ -217,27 +179,29 @@ function selKeyOnChange(event) {
 }
 
 function chkWhiteListModeOnChange() {
-    if ($('#chkWhiteListMode')[0].checked) {
-        $('#Dis-enable').text('Enable');
-        $('#Dis-enabled').text('enabled');
-    } else {
-        $('#Dis-enable').text('Disable');
-        $('#Dis-enabled').text('disabled');
+    $('#lblToggle').text(chrome.i18n.getMessage($('#chkWhiteListMode')[0].checked ? "optSectionSitesEnabled" : "optSectionSitesDisabled"));
+}
+
+function chkAddToHistoryModeOnChange() {
+    if ($('#chkAddToHistory')[0].checked) {
+        chrome.permissions.contains({permissions: ['history']}, function (granted) {
+            if (!granted) {
+                chrome.permissions.request({permissions: ['history']}, function (granted) {
+                    if (!granted) {
+                        $("#chkAddToHistory").trigger('gumby.uncheck');
+                    }
+                });
+            }
+        });
     }
 }
 
-function txtPicturesOpacityOnChange() {
+function percentageOnChange() {
     var value = parseInt(this.value);
-    if (isNaN(value)) {
-        value = 100;
-    }
+    if (isNaN(value)) value = 100;
+    if (value < 0) value = 0;
+    if (value > 100) value = 100;
     this.value = value;
-    $('#sliderPicturesOpacity').slider('value', value);
-}
-
-function enableControls(enabled) {
-    enabled = enabled || false;
-    $('#buttons').find('button').attr('disabled', !enabled);
 }
 
 function onMessage(message, sender, callback) {
@@ -248,45 +212,24 @@ function onMessage(message, sender, callback) {
     }
 }
 
-function chkZoomVideosOnChange() {
-    if (ge('chkZoomVideos').checked) {
-      $('#pMuteVideos').show();
-    } else {
-      $('#pMuteVideos').hide();
-    }
-}
-function chkEnableGalleriesOnChange() {
-    if (ge('chkEnableGalleries').checked) {
-      $('#pGalleriesMouseWheel').show();
-    } else {
-      $('#pGalleriesMouseWheel').hide();
-    }
-}
 $(function () {
     initActionKeys();
-    $('input, select, textarea').change(enableControls).keydown(enableControls);
+    i18n();
+    chkWhiteListModeOnChange();
+    $("#version").text(chrome.i18n.getMessage("optFooterVersionCopyright", chrome.app.getDetails().version));
+
     $('#btnSave').click(saveOptions);
     $('#btnReset').click(restoreOptions);
-    $('#chkZoomVideos').change(chkZoomVideosOnChange);
-    $('#chkWhiteListMode').change(chkWhiteListModeOnChange);
-    $('#chkEnableGalleries').change(chkEnableGalleriesOnChange);
-    $('#tabs').tabs({ selected:(location.hash != '') ? parseInt(location.hash.substr(1)) : 0 });
-    $('#sliderPicturesOpacity').slider({
-        range:'min',
-        min:1,
-        max:100,
-        slide:function (event, ui) {
-            $("#txtPicturesOpacity").val(ui.value);
-            enableControls(true);
-        }
-    });
-    $('#txtPicturesOpacity').change(txtPicturesOpacityOnChange);
+    $('#chkWhiteListMode').parent().on('gumby.onChange', chkWhiteListModeOnChange);
+    $('#chkAddToHistory').parent().on('gumby.onChange', chkAddToHistoryModeOnChange);
+    $('#txtPicturesOpacity').change(percentageOnChange);
+    $('#txtVideoVolume').change(percentageOnChange);
     $('.actionKey').change(selKeyOnChange);
     $('#btnAddExcludedSite').click(btnAddExcludedSiteOnClick);
     $('#btnRemoveExcludedSite').click(btnRemoveExcludedSiteOnClick);
-    $('#btnClearExcludedSites').click(btnClearExcludedSitesOnClick);
     $('#aShowUpdateNotification').click(showUpdateNotification);
+
     restoreOptions();
+
     chrome.runtime.onMessage.addListener(onMessage);
-    $('#versionNumber').text(chrome.app.getDetails().version);
 });

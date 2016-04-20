@@ -1,4 +1,4 @@
-// Copyright (c) 2011 Romain Vallet <hoverzoom@gmail.com>
+// Copyright (c) 2011 Romain Vallet <romain.vallet@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 // The dynamic loading of images in Picasa Web Albums makes it difficult to handle with this extension.

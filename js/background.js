@@ -1,10 +1,7 @@
-﻿// Copyright (c) 2014 Romain Vallet <romain.vallet@gmail.com>
-// Licensed under the MIT license, read license.txt
+﻿// True if the current version of the extension has something to show in an update notification
+var hasReleaseNotes = false;
 
-// True if the current version of the extension has something to show in an update notification
-var hasReleaseNotes = true;
-
-var options, viewWindow = null;
+var options;
 
 // Performs an ajax request
 function ajaxRequest(request, callback) {
@@ -38,7 +35,11 @@ function onMessage(message, sender, callback) {
             callback();
             return true;
         case 'addUrlToHistory':
-            chrome.history.addUrl({url:message.url});
+            chrome.permissions.contains({permissions: ['history']}, function(granted) {
+                if (granted) {
+                    chrome.history.addUrl({url:message.url});
+                }
+            });
             break;
         case 'getOptions':
             callback(options);
@@ -65,6 +66,10 @@ function onMessage(message, sender, callback) {
             localStorage.removeItem(message.id);
             break;
         case 'openViewWindow':
+            var url = message.createData.url;
+            if (url.indexOf('facebook.com/photo/download') != -1) {
+                message.createData.url = 'data:text/html,<img src="' + url + '">';
+            }
             chrome.windows.create(message.createData, function (window) {
                 chrome.tabs.executeScript(window.tabs[0].id, {file:'js/viewWindow.js'});
             });
@@ -74,6 +79,10 @@ function onMessage(message, sender, callback) {
                 message.createData.index = currentTab.index;
                 if (!message.createData.active)
                     message.createData.index++;
+                var url = message.createData.url;
+                if (url.indexOf('facebook.com/photo/download') != -1) {
+                    message.createData.url = 'data:text/html,<img src="' + url + '">';
+                }
                 chrome.tabs.create(message.createData, function (tab) {
                     chrome.tabs.executeScript(tab.id, {file:'js/viewTab.js'});
                 });

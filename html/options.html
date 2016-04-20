@@ -1,254 +1,196 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-    <title>Hover Zoom Options</title>
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css"/>
-    <link rel="stylesheet" href="../css/common.css"/>
-    <style type="text/css">
-        #body {
-            margin: 0 auto;
-            width: 50em;
-        }
-
-        #container {
-            float: left;
-            margin: 1em;
-        }
-
-        #icon {
-            float: left;
-            margin-top: 2em
-        }
-
-        #tabs {
-            width: 30em;
-            min-height: 19em;
-        }
-
-        #tabs li {
-            font-size: 10pt;
-        }
-
-        #title {
-            font-size: 1.5em
-        }
-
-        #selExcludedSites, #txtAddExcludedSite {
-            width: 23em;
-        }
-
-        #excludedSites button {
-            width: 5em;
-        }
-
-        #messages {
-            padding: 1em;
-            max-width: 28em;
-            height: 3em;
-        }
-
-        #saved {
-            display: none;
-            background-color: #ffd;
-            padding: .5em;
-        }
-
-        #saved p {
-            font-size: 9pt;
-        }
-
-        #title, #buttons, #about, #about p, #messages p {
-            text-align: center
-        }
-
-        #delays p, #delays input, #txtPicturesOpacity {
-            text-align: right
-        }
-
-        .notice {
-            font-size: 8pt;
-        }
-
-        .hint {
-            font-size: 8pt;
-            padding-left: 25px;
-            display: block;
-        }
-
-        .hint, .hint a {
-            color: #555;
-        }
-
-        #sliderPicturesOpacity {
-            font-size: 0.7em;
-            margin-bottom: 0.5em
-        }
-
-        hr {
-            margin: 0.7em 0
-        }
-
-        .actionKey {
-            line-height: 14px;
-            margin-top: 10px;
-            /*text-align: center;*/
-        }
-    </style>
+    <title data-i18n="optTitle"></title>
+    <link rel="stylesheet" href="../css/gumby.css"/>
+    <link rel="stylesheet" href="../css/style.css"/>
+    <script src="../js/libs/modernizr-2.7.1.min.js"></script>
 </head>
 <body>
-<div id="body">
-    <img id="icon" src="../images/icon128.png">
-
-    <div id="container">
-        <h1 id="title">FreeImageZoom Options</h1>
-
-        <div id="tabs">
-            <ul>
-                <li><a href="#optionTab1">General</a></li>
-                <li><a href="#optionTab2">Sites</a></li>
-                <li><a href="#optionTab3">Action keys</a></li>
-                <li><a href="#optionTab4">Advanced</a></li>
-                <li><a href="#optionTab5">Support the project</a></li>
+<div class="pretty container">
+    <div class="row">
+        <div class="two columns text-center"><img src="../images/icon128.png"></div>
+        <h1 class="ten columns text-center" data-i18n="optTitle"></h1>
+    </div>
+    <div class="row">
+        <section class="tabs pill">
+            <ul class="tab-nav">
+                <li class="active"><a href="#" data-i18n="optPageGeneral"></a></li>
+                <li><a href="#" data-i18n="optPageSites"></a></li>
+                <li><a href="#" data-i18n="optPageActionKeys"></a></li>
+                <li><a href="#" data-i18n="optPageAdvanced"></a></li>
             </ul>
-            <div id="optionTab1">
-                <p><input type="checkbox" id="chkExtensionEnabled"> <label for="chkExtensionEnabled">Enable FreeImageZoom</label></p>
-
-                <h2>View</h2>
-
-                <p><input type="checkbox" id="chkZoomVideos"> <label for="chkZoomVideos">Zoom videos (WebM, MP4)</label></p>
-                <p id="pMuteVideos"><input type="checkbox" id="chkMuteVideos" style="margin-left: 2em"> <label for="chkMuteVideos">Mute zoomed videos</label></p>
-                <p><input type="checkbox" id="chkMouseUnderlap"> <label for="chkMouseUnderlap">Extend zoomed images
-                    below the mouse cursor<br>
-                    <span class="hint">If unchecked, zoomed images will be resized dynamically.</span></label></p>
-
-                <p><input type="checkbox" id="chkPageActionEnabled"> <label for="chkPageActionEnabled">Show icon in
-                    address bar<br>
-                    <span class="hint">(Only when images can be zoomed)</span></label></p>
-
-                <p><input type="checkbox" id="chkShowCaptions"> <label for="chkShowCaptions">Show pictures captions<br>
-                    <span class="hint">(When available)</span></label></p>
-
-                <p><input type="checkbox" id="chkShowWhileLoading"> <label for="chkShowWhileLoading">Show zoomed
-                    pictures while loading</label></p>
-
-                <p><input type="checkbox" id="chkShowHighRes"> <label for="chkShowHighRes">Show high resolution pictures
-                    when available<br>
-                    <span class="hint">Pictures may take more time to load.</span></label></p>
-
-                <h2>Delays</h2>
-
-                <div id="delays">
-                    <p><label for="txtDisplayDelay">Delay before displaying a picture</label>: <input type="text"
-                                                                                                      id="txtDisplayDelay"
-                                                                                                      size="2"> sec.</p>
-
-                    <p><label for="txtFadeDuration">Fading animation duration</label>: <input type="text"
-                                                                                              id="txtFadeDuration"
-                                                                                              size="2"> sec.</p>
-                </div>
+            <div class="tab-content active">
+                <form>
+                    <div class="field"><label class="checkbox" for="chkExtensionEnabled">
+                        <input type="checkbox" id="chkExtensionEnabled"><span></span>
+                        <div style="display:inline" data-i18n="optExtensionEnabled"></div>
+                    </label></div>
+                    <fieldset>
+                        <legend data-i18n="optSectionView"></legend>
+                        <ul>
+                            <div class="ttip" data-i18n-tooltip="optMouseUnderlapTooltip">
+                                <li class="field"><label class="checkbox" for="chkMouseUnderlap">
+                                    <input type="checkbox" id="chkMouseUnderlap"><span></span>
+                                    <div style="display:inline" data-i18n="optMouseUnderlap"></div>
+                                </label></li>
+                            </div>
+                            <div class="ttip" data-i18n-tooltip="optPageActionEnabledTooltip">
+                                <li class="field"><label class="checkbox" for="chkPageActionEnabled">
+                                    <input class="input" type="checkbox" id="chkPageActionEnabled"><span></span>
+                                    <div style="display:inline" data-i18n="optPageActionEnabled"></div>
+                                </label></li>
+                            </div>
+                            <div class="ttip" data-i18n-tooltip="optShowCaptionsTooltip">
+                                <li class="field"><label class="checkbox" for="chkShowCaptions">
+                                    <input type="checkbox" id="chkShowCaptions"><span></span>
+                                    <div style="display:inline" data-i18n="optShowCaptions"></div>
+                                </label></li>
+                            </div>
+                            <div class="ttip" data-i18n-tooltip="optShowWhileLoadingTooltip">
+                                <li class="field"><label class="checkbox" for="chkShowWhileLoading">
+                                    <input type="checkbox" id="chkShowWhileLoading"><span></span>
+                                    <div style="display:inline" data-i18n="optShowWhileLoading"></div>
+                                </label></li>
+                            </div>
+                            <div class="ttip" data-i18n-tooltip="optShowHighResTooltip">
+                                <li class="field"><label class="checkbox" for="chkShowHighRes">
+                                    <input type="checkbox" id="chkShowHighRes"><span></span>
+                                    <div style="display:inline" data-i18n="optShowHighRes"></div>
+                                </label></li>
+                            </div>
+							<div class="ttip" data-i18n-tooltip="optGalleriesMouseWheelTooltip">
+                                <li class="field"><label class="checkbox" for="chkGalleriesMouseWheel">
+                                    <input type="checkbox" id="chkGalleriesMouseWheel"><span></span>
+                                    <div style="display:inline" data-i18n="optGalleriesMouseWheel"></div>
+                                </label></li>
+                            </div>
+                            <div class="ttip" data-i18n-tooltip="optZoomVideosTooltip">
+                                <li class="field"><label class="checkbox" for="chkZoomVideos">
+                                    <input type="checkbox" id="chkZoomVideos"><span></span>
+                                    <div style="display:inline" data-i18n="optZoomVideos"></div>
+                                </label></li>
+                            </div>
+                            <div class="ttip" data-i18n-tooltip="optMuteVideosTooltip">
+                                <li class="field"><label class="checkbox" for="chkMuteVideos">
+                                    <input type="checkbox" id="chkMuteVideos"><span></span>
+                                    <div style="display:inline" data-i18n="optMuteVideos"></div>
+                                </label></li>
+                            </div>
+                            <div class="ttip" data-i18n-tooltip="optVideoVolumeTooltip">
+                                <li class="append field"><label class="inline" for="txtVideoVolume">
+                                    <div style="display:inline" data-i18n="optVideoVolume"></div>
+                                    <input class="xnarrow text input" type="text" id="txtVideoVolume"><span class="adjoined" data-i18n="optVolumeUnitName"></span>
+                                </label></li>
+                            </div>
+                            <div class="ttip" data-i18n-tooltip="optEnableAmbilightTooltip">
+                                <li class="field"><label class="checkbox" for="chkAmbilightEnabled">
+                                    <input type="checkbox" id="chkAmbilightEnabled"><span></span>
+                                    <div style="display:inline" data-i18n="optEnableAmbilight"></div>
+                                </label></li>
+                            </div>
+                        </ul>
+                    </fieldset>
+                    <fieldset>
+                        <legend data-i18n="optSectionDelays"></legend>
+                        <ul>
+                            <li class="append field"><label class="inline" for="txtDisplayDelay">
+                                <div style="display:inline" data-i18n="optDisplayDelay"></div>
+                                <input class="xnarrow text input" type="text" id="txtDisplayDelay"><span class="adjoined" data-i18n="optDurationUnitName"></span>
+                            </label></li>
+                            <li class="append field"><label class="inline" for="txtDisplayDelayVideo">
+                                <div style="display:inline" data-i18n="optDisplayDelayVideo"></div>
+                                <input class="xnarrow text input" type="text" id="txtDisplayDelayVideo"><span class="adjoined" data-i18n="optDurationUnitName"></span>
+                            </label></li>
+                            <li class="append field"><label class="inline" for="txtFadeDuration">
+                                <div style="display:inline" data-i18n="optFadeDuration"></div>
+                                <input class="xnarrow text input" type="text" id="txtFadeDuration"><span class="adjoined" data-i18n="optDurationUnitName"></span>
+                            </label></li>
+                        </ul>
+                    </fieldset>
+                </form>
             </div>
-            <div id="optionTab2">
-                <h2><span id="Dis-enable">Disable</span> FreeImageZoom for specific sites</h2>
-
-                <p>Enter URLs for which FreeImageZoom must be <span id="Dis-enabled">disabled</span>.</p>
-
-                <p><i>Examples: facebook.com, google.com/reader</i></p>
-                <table id="excludedSites">
-                    <tr>
-                        <td><input type="text" id="txtAddExcludedSite"></td>
-                        <td>
-                            <button id="btnAddExcludedSite">Add</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><select id="selExcludedSites" size="8"></select></td>
-                        <td>
-                            <button id="btnRemoveExcludedSite">Remove</button>
-                            <br>
-                            <button id="btnClearExcludedSites">Clear</button>
-                        </td>
-                    </tr>
-                </table>
-                <p class="notice">Be aware that domain filters can overlap. Example: if you have filtered
-                    "picasaweb.google.com" and "google.com", removing "picasaweb.google.com" will not reactivate Picasa
-                    Web Albums, as it will still be excluded by the "google.com" filter.</p>
-
-                <h2><input type="checkbox" id="chkWhiteListMode"> <label for="chkWhiteListMode">White list mode</label>
-                </h2>
-
-                <p>If this box is checked, FreeImageZoom will be enabled <em>only</em> for the sites listed above.</p>
+            <div class="tab-content">
+                <form>
+                    <div class="ttip" data-i18n-tooltip="optWhitelistModeTooltip">
+                        <div class="field"><label class="checkbox" for="chkWhiteListMode">
+                            <input type="checkbox" id="chkWhiteListMode"><span></span>
+                            <div style="display:inline" data-i18n="optWhitelistMode"></div>
+                        </label></div>
+                    </div>
+                    <fieldset>
+                        <legend id="lblToggle"></legend>
+                        <div class="append field"><label for="txtAddExcludedSite">
+                            <input class="wide text input" type="text" id="txtAddExcludedSite" data-i18n-placeholder="optSitePlaceholder">
+                            <div class="medium primary btn"><a href="#" id="btnAddExcludedSite" data-i18n="optButtonAddSite"></a></div>
+                        </label></div>
+                        <ul id="selExcludedSites"></ul>
+                        <p data-i18n="optSiteDisclaimer"></p>
+                    </fieldset>
+                </form>
             </div>
-            <div id="optionTab3">
-                <table id="tableActionKeys">
-                </table>
+            <div class="tab-content">
+                <table id="tableActionKeys"></table>
             </div>
-            <div id="optionTab4">
-                <h2>Advanced options</h2>
-
-                <p><input type="checkbox" id="chkUpdateNotifications"> <label for="chkUpdateNotifications">Show update
-                    notifications</label>
-                    <!--<br><span class="hint"><button id="aShowUpdateNotification" href="#">Show latest</button></span>-->
-                </p>
-
-                <p><input type="checkbox" id="chkAddToHistory"> <label for="chkAddToHistory">Add viewed pictures to the
-                    browser's history</label></p>
-
-                <p><input type="checkbox" id="chkFilterNSFW"> <label for="chkFilterNSFW">Exclude NSFW images (Reddit
-                    only)</label></p>
-
-                <p><input type="checkbox" id="chkAlwaysPreload"> <label for="chkAlwaysPreload">Automatically preload
-                    zoomed images<br>
-                    <span class="hint">(This may slow down browsing and consume a lot of bandwidth)</span></label></p>
-                    
-                <p><input type="checkbox" id="chkEnableGalleries"> <label for="chkEnableGalleries">Enable albums support</label></p>
-
-                <p id="pGalleriesMouseWheel"><input type="checkbox" id="chkGalleriesMouseWheel" style="margin-left: 2em"> <label for="chkGalleriesMouseWheel">Mouse wheel navigation</label></p>
-                <hr>
-                <p><label for="txtPicturesOpacity">Zoomed pictures opacity</label>: <input type="text"
-                                                                                           id="txtPicturesOpacity"
-                                                                                           size="2"> %
-
-                <div id="sliderPicturesOpacity"></div>
-                <div class="notice"><span>Transparent</span><span style="float: right">Opaque</span></div>
-                </p>
+            <div class="tab-content">
+                <form>
+                    <fieldset>
+                        <legend data-i18n="optSectionAdvanced"></legend>
+                        <ul>
+                            <li class="field"><label class="checkbox" for="chkUpdateNotifications">
+                                <input type="checkbox" id="chkUpdateNotifications"><span></span>
+                                <div style="display:inline" data-i18n="optUpdateNotifications"></div> <a id="aShowUpdateNotification" data-i18n="optShowLastUpdateNotification"></a>
+                            </label></li>
+                            <li class="field"><label class="checkbox" for="chkAddToHistory">
+                                <input type="checkbox" id="chkAddToHistory"><span></span>
+                                <div style="display:inline" data-i18n="optAddToHistory"></div>
+                            </label></li>
+                            <li class="field"><label class="checkbox" for="chkFilterNSFW">
+                                <input type="checkbox" id="chkFilterNSFW"><span></span>
+                                <div style="display:inline" data-i18n="optFilterNSFW"></div>
+                            </label></li>
+                            <li class="field"><label class="checkbox" for="chkAlwaysPreload">
+                                <input type="checkbox" id="chkAlwaysPreload"><span></span>
+                                <div style="display:inline" data-i18n="optAlwaysPreload"></div>
+                            </label></li>
+                            <li class="field"><label class="checkbox" for="chkEnableGalleries">
+                                <input type="checkbox" id="chkEnableGalleries"><span></span>
+                                <div style="display:inline" data-i18n="optEnableGalleries"></div>
+                            </label></li>
+                            <li class="append field"><label class="inline" for="txtPicturesOpacity">
+                                <div style="display:inline" data-i18n="optPicturesOpacity"></div>
+                                <input class="xnarrow text input" type="text" id="txtPicturesOpacity"><span class="adjoined" data-i18n="optOpacityUnitName"></span>
+                            </label></li>
+                        </ul>
+                    </fieldset>
+                </form>
             </div>
-            <div id="optionTab5">
-                <h2>Support FreeImageZoom Development</h2>
-
-                <p>FreeImageZoom is distributed for free and is supported via donation.  Currently the best way to donate is in the form of pull requests via <a href="https://github.com/PaulSpoerry/FreeImageZoom/pulls">GitHub</a> but if you don't have time to spare <a href="https://www.gittip.com/paulspoerry/">gittip</a> are also appreciated.  Or just tell your friends.</p>
-            </div>
+        </section>
+    </div>
+    <div class="row">
+        <div class="push_three three columns text-center">
+            <div class="medium success btn icon-left entypo icon-floppy"><a href="#" id="btnSave" data-i18n="optButtonSave"></a></div>
         </div>
-        <div id="buttons">
-            <button id="btnSave">Save</button>
-            <button id="btnReset">Reset</button>
+        <div class="three columns text-center">
+            <div class="medium info btn icon-left entypo icon-arrows-ccw"><a href="#" id="btnReset" data-i18n="optButtonReset"></a></div>
         </div>
-        <div id="messages">
-            <div id="saved"><p>Options saved.<br>Some settings may need a page refresh.</p></div>
+    </div>
+    <div id="messages" class="row">
+        <div class="four columns centered text-center">
+            <div class="success alert" data-i18n="optSaved"></div>
         </div>
-        <div id="about">
-            FreeImageZoom would not be possible without a lot of hard work and dedication from Romain Vallet.  That said, FreeImageZoom embraces the spirit of open source software in allowing for development to continue without the threat of malicious changes or violation of privacy or degradation of users' browsing experience. FreeImageZoom appreciates and fully recognizes the contributions of Ralph Tice. It was he who first produced the original fork which removed the items listed above. 
-            <p><g:chrome-web-store widgettype="ratingreview" appid="hcmnnggnaofmhflgomfjfbndngdoogkj"></g:chrome-web-store></p>
-            <script type="text/javascript" src="https://chrome.google.com/webstore/widget/developer/scripts/widget.js"></script>
-            <p><a target="_blank" href="https://github.com/PaulSpoerry/FreeImageZoom/">Home page</a> -
-                <a target="_blank" href="https://github.com/PaulSpoerry/FreeImageZoom/issues">Report a bug</a></p>
-
-            <!-- Google +1 -->
-            <div class="g-plusone" data-size="small"
-                 data-href="https://chrome.google.com/webstore/detail/hover-free/hcmnnggnaofmhflgomfjfbndngdoogkj"></div>
-            <script src="../js/g-plusone.js"></script>
-
-            <!-- Facebook Like -->
-            <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2Fpages%2FHover-Free%2F122258947959335&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;colorscheme=light&amp;height=21&amp;ref=options_page"
-                    style="border:none; overflow:hidden; width:100px; height:21px; vertical-align: middle;"></iframe>
-
-            <p>Version <span id="versionNumber"></span>
-            <p>&copy; 2013 Romain Vallet &copy; 2013 Ralph Tice &copy;Paul Spoerry</p>
+    </div>
+    <div class="row">
+        <div class="twelve columns centered text-center">
+            <p><a target="_blank" href="https://github.com/PaulSpoerry/FreeImageZoom" data-i18n="optFooterSourceCode"></a> | <a target="_blank" href="https://github.com/PaulSpoerry/FreeImageZoom/issues" data-i18n="optFooterReportIssue"></a></p>
+            <p id="version"></p>
         </div>
     </div>
 </div>
-<script src="../js/jquery.min.js"></script>
-<script src="../js/jquery-ui.min.js"></script>
+<script src="../js/libs/jquery-2.1.1.min.js"></script>
+<script src="../js/libs/gumby.min.js"></script>
 <script src="../js/tools.js"></script>
+<script src="../js/plugins.js"></script>
 <script src="../js/common.js"></script>
 <script src="../js/options.js"></script>
 </body>

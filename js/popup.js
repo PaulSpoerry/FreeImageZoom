@@ -3,44 +3,54 @@
     prgPreloading, lblPreloading, aPreload;
 
 $(function () {
-    // Load options
-    options = loadOptions();
     i18n();
-    $('#Dis-enable').text(options.whiteListMode ? chrome.i18n.getMessage("popEnableForSite1") : chrome.i18n.getMessage("popDisableForSite1"));
+
+    options = loadOptions();
     prgPreloading = $('#prgPreloading');
     lblPreloading = $('#lblPreloading');
-    aPreload = $('#aPreload');
 
+    aPreload = $('#aPreload');
     aPreload.click(aPreloadOnClick);
-    $('#chkExtensionDisabled').click(chkExtensionDisabledOnClick);
-    $('#chkExcludeSite').click(chkExcludeSiteOnClick);
+
+    $('#chkExtensionDisabled').parent().on('gumby.onChange', chkExtensionDisabledOnClick);
 
     if (!options.alwaysPreload) {
         aPreload.css('display', 'inline');
     }
 
-    chrome.tabs.getSelected(null, function (tab) {
-        siteDomain = tab.url.split('/', 3)[2];
-        $('#siteDomain').text(siteDomain);
-
-        $('#chkExtensionDisabled')[0].checked = !options.extensionEnabled;
-
-        for (var i = 0; i < options.excludedSites.length; i++) {
-            if (options.excludedSites[i] == siteDomain) {
-                $('#chkExcludeSite')[0].checked = true;
-                break;
-            }
+    chrome.permissions.contains({permissions: ['tabs']}, function (granted) {
+        if (granted) {
+            $('#chkExcludeSite').parent().on('gumby.onChange', chkExcludeSiteOnClick);
+            setTabHook(options);
+        } else {
+            $('#chkExcludeSite').parent().on('gumby.onChange', askTabsPermissions);
         }
     });
+
     chrome.runtime.onMessage.addListener(onMessage);
 });
 
-function i18n() {
-    $('#lblDisable').text(chrome.i18n.getMessage("popDisableForAllSites"));
-    $('#lblFor').text(chrome.i18n.getMessage("popDisableForSite2"));
-    $('#aPreload').text(chrome.i18n.getMessage("popPreloadImages"));
-    $('#spanPreloading').text(chrome.i18n.getMessage("popPreloadingImages"));
-    $('#aMoreOptions').text(chrome.i18n.getMessage("popMoreOptions"));
+function askTabsPermissions() {
+    chrome.permissions.contains({permissions: ['tabs']}, function (granted) {
+        if (!granted) {
+            chrome.permissions.request({permissions: ['tabs']}, function (granted) {
+                if (granted) {
+                    setTabHook(options);
+                    window.close();
+                }
+            });
+        }
+    });
+}
+
+function setTabHook(options) {
+    chrome.tabs.getSelected(null, function (tab) {
+        siteDomain = tab.url.split('/', 3)[2];
+        $('#lblToggle').text(chrome.i18n.getMessage(options.whiteListMode ? 'popEnableForSite' : 'popDisableForSite', siteDomain));
+        $('#chkExtensionDisabled')[0].checked = !options.extensionEnabled;
+        $('#chkExcludeSite')[0].checked = isExcludedSite(tab.url);
+        $('input:checked').trigger('gumby.check');
+    });
 }
 
 function chkExtensionDisabledOnClick() {
@@ -49,7 +59,6 @@ function chkExtensionDisabledOnClick() {
 }
 
 function chkExcludeSiteOnClick() {
-
     // Get the excluded site index if it has already been added
     var excludedSiteIndex = -1;
     for (var i = 0; i < options.excludedSites.length; i++) {
@@ -87,6 +96,11 @@ function onMessage(message, sender, callback) {
                 aPreload.css('display', 'none');
             }
             break;
+        case 'askTabsPermissions':
+            chrome.permissions.request({permissions: ['tabs']}, function (granted) {
+                callback(granted);
+            });
+            break;
     }
 }
 
@@ -95,4 +109,5 @@ function aPreloadOnClick() {
     aPreload.css('display', 'none');
     prgPreloading.attr('value', 0).attr('max', 1);
     lblPreloading.css('display', 'inline');
+    return false;
 }

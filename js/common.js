@@ -1,6 +1,3 @@
-// Copyright (c) 2014 Romain Vallet <romain.vallet@gmail.com>
-// Licensed under the MIT license, read license.txt
-
 // Load options from local storage
 // Return default values if none exist
 function loadOptions() {
@@ -8,17 +5,20 @@ function loadOptions() {
     if (localStorage.options == null) {
         localStorage.options = '{}';
     }
-    options = JSON.parse(localStorage.options);
+    options = JSON.parse(localStorage.options);  // TODO: Migrate to https://developer.chrome.com/extensions/storage
 
     options.extensionEnabled = options.hasOwnProperty('extensionEnabled') ? options.extensionEnabled : true;
     options.zoomVideos = options.hasOwnProperty('zoomVideos') ? options.zoomVideos : true;
-    options.muteVideos = options.hasOwnProperty('muteVideos') ? options.muteVideos : true;
+    options.muteVideos = options.hasOwnProperty('muteVideos') ? options.muteVideos : false;
+    options.videoVolume = options.hasOwnProperty('videoVolume') ? options.videoVolume : 0.25;
     options.pageActionEnabled = options.hasOwnProperty('pageActionEnabled') ? options.pageActionEnabled : true;
     options.showCaptions = options.hasOwnProperty('showCaptions') ? options.showCaptions : true;
-    options.showHighRes = options.hasOwnProperty('showHighRes') ? options.showHighRes : false;
-    options.addToHistory = options.hasOwnProperty('addToHistory') ? options.addToHistory : true;
+    options.showHighRes = options.hasOwnProperty('showHighRes') ? options.showHighRes : true;
+    options.galleriesMouseWheel = options.hasOwnProperty('galleriesMouseWheel') ? options.galleriesMouseWheel : true;
+    options.addToHistory = options.hasOwnProperty('addToHistory') ? options.addToHistory : false;
     options.alwaysPreload = options.hasOwnProperty('alwaysPreload') ? options.alwaysPreload : false;
     options.displayDelay = options.hasOwnProperty('displayDelay') ? options.displayDelay : 100;
+    options.displayDelayVideo = options.hasOwnProperty('displayDelayVideo') ? options.displayDelayVideo : 500;
     options.fadeDuration = options.hasOwnProperty('fadeDuration') ? options.fadeDuration : 200;
     options.excludedSites = options.hasOwnProperty('excludedSites') ? options.excludedSites : [];
     options.whiteListMode = options.hasOwnProperty('whiteListMode') ? options.whiteListMode : false;
@@ -26,11 +26,9 @@ function loadOptions() {
     options.showWhileLoading = options.hasOwnProperty('showWhileLoading') ? options.showWhileLoading : true;
     options.mouseUnderlap = options.hasOwnProperty('mouseUnderlap') ? options.mouseUnderlap : true;
     options.updateNotifications = options.hasOwnProperty('updateNotifications') ? options.updateNotifications : true;
-    options.enableAds = options.hasOwnProperty('enableAds') ? options.enableAds : 0;
     options.filterNSFW = options.hasOwnProperty('filterNSFW') ? options.filterNSFW : false;
     options.enableGalleries = options.hasOwnProperty('enableGalleries') ? options.enableGalleries : true;
-    options.galleriesMouseWheel = options.hasOwnProperty('galleriesMouseWheel') ? options.galleriesMouseWheel : true;
-    options.enableStats = options.hasOwnProperty('enableStats') ? options.enableStats : true;
+    options.ambilightEnabled = options.hasOwnProperty('ambilightEnabled') ? options.ambilightEnabled : false;
 
     // Action keys
     options.actionKey = options.hasOwnProperty('actionKey') ? options.actionKey : 0;
@@ -87,30 +85,6 @@ function isExcludedSite(url) {
     return !excluded;
 }
 
-function compareVersionNumbers(v1, v2) {
-    var aV1 = v1.split('.'),
-        aV2 = v2.split('.'),
-        l = Math.min(aV1.length, aV2.length),
-        i, cmp;
-    for (i = 0; i < l; i++) {
-        cmp = parseInt(aV1[i]) < parseInt(aV2[i]);
-        if (cmp !== 0) {
-            return cmp;
-        }
-    }
-    return aV1.length - aV2.length;
-}
-
-// Return true if the version of Chrome is superior or equal to minVersion
-function hasMinChromeVersion(minVersion) {
-    var matches = navigator.appVersion.match(/Chrome\/([^\s]+)/);
-    if (!matches || matches.length < 2) {
-        return;
-    }
-    var currentVersion = matches[1];
-    return compareVersionNumbers(currentVersion, minVersion) >= 0;
-}
-
 function keyCodeToKeyName(keyCode) {
     if (keyCode == 16) {
         return 'Shift';
@@ -127,17 +101,31 @@ function keyCodeToKeyName(keyCode) {
 
 function showUpdateNotification() {
     if (chrome.notifications) {
-        var notifId = 'FreeImageZoomUpdate',
-            options = {
-                type: 'list',
-                iconUrl: '/images/icon128.png',
-                title: 'FreeImageZoom has been updated',
-                message: '',
-                items: [
-                    { title: "Updated version numbers, added shortname", message: ""},
-                    { title: "Adjustments for Chrome store settings", message: ""}
-                ]
-            };
-        chrome.notifications.create(notifId, options, function(id){});
+        var options = {
+            type: 'list',
+            title: chrome.i18n.getMessage('extUpdated'),
+            message: '',
+            iconUrl: '/images/icon32.png',
+            items: [
+                { title: "Store compatibility changes. Fetlife enhancements.", message: "" }
+            ]
+        };
+        chrome.notifications.create(chrome.i18n.getMessage('extName'), options, function(id) {});
     }
+    return false;
+}
+
+function i18n() {
+    $('[data-i18n]').each(function(index, element) {
+        var elem = $(element);
+        elem.text(chrome.i18n.getMessage(elem.attr('data-i18n')));
+    });
+    $('[data-i18n-placeholder]').each(function(index, element) {
+        var elem = $(element);
+        elem.attr('placeholder', chrome.i18n.getMessage(elem.attr('data-i18n-placeholder')));
+    });
+    $('[data-i18n-tooltip]').each(function(index, element) {
+        var elem = $(element);
+        elem.attr('data-tooltip', chrome.i18n.getMessage(elem.attr('data-i18n-tooltip')));
+    });
 }

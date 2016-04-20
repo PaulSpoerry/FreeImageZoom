@@ -1,4 +1,4 @@
-// Copyright (c) 2014 Romain Vallet <hoverzoom@gmail.com>
+// Copyright (c) 2014 Romain Vallet <romain.vallet@gmail.com>
 // Licensed under the MIT license, read license.txt
 
 var hoverZoomPlugins = hoverZoomPlugins || [];
@@ -19,6 +19,11 @@ hoverZoomPlugins.push({
             link.mousemove(function() {
                 currSrc = $(this).data().hoverZoomSrc;
             });
+            // Trying to suppress default zoom effect. Maybe later.
+            //var parent = link.parents('div.iuscp');
+            //parent.attr('data-hovstyle', parent.attr('style'));
+            //link.attr('data-hovstyle', link.attr('style'));
+            //link.attr('data-nmstyle', link.attr('style'));
         });
 
         $('body').on('mouseenter', 'div.irhc span.center a img', function() {

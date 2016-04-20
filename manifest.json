@@ -1,14 +1,14 @@
 ﻿{
     "background":{
-        "page":"html/background.html"
+      "scripts": [ "js/common.js", "js/background.js" ]
     },
    "content_scripts": [ {
       "all_frames": true,
-            "js":["js/tools.js", "js/jquery.min.js", "plugins/default.js"],
+      "js": [ "js/libs/jquery-2.1.1.min.js", "js/tools.js", "js/plugins.js", "plugins/default.js" ],
       "matches": [ "\u003Call_urls>" ]
    }, {
       "all_frames": true,
-      "js": [ "plugins/imgur_a.js", "plugins/flickr_a.js", "plugins/tumblr_a.js", "plugins/picasa_a.js", "plugins/imageshack_a.js", "plugins/mediawiki_a.js", "plugins/wordpress_a.js", "plugins/vbulletin_a.js", "plugins/photoshop_a.js", "plugins/instagram_a.js", "plugins/deviantart_a.js", "plugins/youtube_a.js", "plugins/gravatar_a.js", "plugins/gallery_a.js", "plugins/ipboard_a.js" ],
+      "js": [ "plugins/imgur_a.js", "plugins/flickr_a.js", "plugins/tumblr_a.js", "plugins/picasa_a.js", "plugins/imageshack_a.js", "plugins/mediawiki_a.js", "plugins/wordpress_a.js", "plugins/vbulletin_a.js", "plugins/photoshop_a.js", "plugins/instagram_a.js", "plugins/deviantart_a.js", "plugins/youtube_a.js", "plugins/gravatar_a.js", "plugins/gallery_a.js", "plugins/ipboard_a.js", "plugins/streamable_a.js", "plugins/vine_a.js", "plugins/twitter_a.js" ],
       "matches": [ "\u003Call_urls>" ]
    }, {
       "all_frames": true,
@@ -50,9 +50,6 @@
    }, {
             "js":["plugins/amazon.js"],
       "matches": [ "*://*.amazon.com/*", "*://*.amazon.ca/*", "*://*.amazon.cn/*", "*://*.amazon.fr/*", "*://*.amazon.de/*", "*://*.amazon.co.jp/*", "*://*.amazon.co.uk/*", "*://*.gizmodo.jp/*" ]
-   }, {
-      "js": [ "plugins/live.js" ],
-      "matches": [ "*://*.mail.live.com/*" ]
    }, {
             "js":["plugins/windowslive.js"],
             "matches":["*://*.photos.live.com/*"]
@@ -232,7 +229,7 @@
             "js":["plugins/paheal.js"],
             "matches":["*://*.paheal.net/*"]
    }, {
-      "js": [ "plugins/reddit.js", "plugins/livememe.js", "plugins/memegenerator.js", "plugins/slutcapades.js", "plugins/memefive.js", "plugins/gfycat.js", "plugins/memedad.js" ],
+      "js": [ "plugins/reddit.js", "plugins/livememe.js", "plugins/memegenerator.js", "plugins/slutcapades.js", "plugins/memefive.js", "plugins/gfycat.js", "plugins/pornbot.js", "plugins/memedad.js" ],
       "matches": [ "*://*.reddit.com/*" ]
    }, {
             "js":["plugins/quickmeme.js"],
@@ -374,9 +371,6 @@
             "js":[ "plugins/taobao.js" ],
             "matches":[ "*://*.taobao.com/*" ]
    }, {
-      	     "js": [ "plugins/fetlife.js" ],
-      	     "matches": [ "*://*.fetlife.com/*", "*://*.fastly.net/*" ]
-	}, {
             "js":[ "plugins/lazygirls_info.js" ],
             "matches":[ "*://*.lazygirls.info/*" ]
    }, {
@@ -431,20 +425,40 @@
       "js": [ "plugins/miiverse.js" ],
       "matches": [ "*://miiverse.nintendo.net/*" ]
    }, {
-      "js": [ "plugins/mercadolibre_com_ar.js" ],
-      "matches": [ "*://*.mercadolibre.com.ar/*" ]
+      "js": [ "plugins/fetlife.js" ],
+      "matches": [ "*://*.fetlife.com/*", "*://*.fastly.net/*" ],
+      "run_at": "document_start"
    }, {
-      "js": [ "plugins/voxmedia.js" ],
-      "matches": [ "*://*.polygon.com/*", "*://*.theverge.com/*" ]
+      "js": [ "plugins/kink.js" ],
+      "matches": [ "*://*.kinkondemand.com/*", "*://*.behindkink.com/*", "*://*.kink.com/*", "*://*.kinkclassic.com/*", "*://*.kinkarchive.com/*", "*://*.kinklive.com/*", "*://*.animatedkink.com/*", "*://*.boundgangbangs.com/*", "*://*.devicebondage.com/*", "*://*.divinebitches.com/*", "*://*.dungeonsex.com/*", "*://*.electrosluts.com/*", "*://*.everythingbutt.com/*", "*://*.footworship.com/*", "*://*.fuckingmachines.com/*", "*://*.hardcoregangbang.com/*", "*://*.hogtied.com/*", "*://*.3dkink.com/*", "*://*.kinkuniversity.com/*", "*://*.meninpain.com/*", "*://*.publicdisgrace.com/*", "*://*.sadisticrope.com/*", "*://*.sexandsubmission.com/*", "*://*.thetrainingofo.com/*", "*://*.theupperfloor.com/*", "*://*.tspussyhunters.com/*", "*://*.tsseduction.com/*", "*://*.ultimatesurrender.com/*", "*://*.waterbondage.com/*", "*://*.whippedass.com/*", "*://*.wiredpussy.com/*", "*://*.kinkmen.com/*", "*://*.30minutesoftorment.com/*", "*://*.boundgods.com/*", "*://*.boundinpublic.com/*", "*://*.buttmachineboys.com/*", "*://*.kinkmenarchive.com/*", "*://*.menonedge.com/*", "*://*.nakedkombat.com/*" ],
+      "run_at": "document_start"
    }, {
-        "js": [ "plugins/olx_pl.js" ],
-	     "matches": [ "*://*.olx.pl/*" ]
+      "js": [ "plugins/kenmarcus.js" ],
+      "matches": [ "*://*.kenmarcus.com/*" ],
+      "run_at": "document_start"
+   }, {
+      "js": [ "plugins/zenfolio.js" ],
+      "matches": [ "*://*.zenfolio.com/*", "*://*.goodgirlbadgirlboudoir.com/*" ],
+      "run_at": "document_start"
+   }, {
+      "js": [ "plugins/escapistmagazine.js" ],
+      "matches": [ "*://*.escapistmagazine.com/*" ],
+      "run_at": "document_start"
+   }, {
+      "js": [ "plugins/dirty.js" ],
+      "matches": [ "*://*.d3.ru/*", "*://*.dirty.ru/*" ]
+   }, {
+      "js": [ "plugins/intersecinteractive.js" ],
+      "matches": [ "*://*.sexuallybroken.com/*", "*://*.hardtied.com/*", "*://*.infernalrestraints.com/*", "*://*.topgrl.com/*", "*://*.realtimebondage.com/*" ],
+      "run_at": "document_start"
+   }, {
+      "js": [ "plugins/slickdeals.js" ],
+      "matches": [ "*://*.slickdeals.net/*" ]
    }, {
       "all_frames": true,
             "js":["js/hoverzoom.js"],
            "matches": [ "\u003Call_urls>" ]
    } ],
-   "content_security_policy": "script-src 'self' https://apis.google.com https://ssl.google-analytics.com; object-src 'self'",
     "default_locale":"en",
    "description": "__MSG_extDescription__",
    "homepage_url": "http://paulspoerry.github.io/FreeImageZoom",
@@ -455,17 +469,23 @@
       "48": "images/icon48.png"
    },
    "manifest_version": 2,
-   "minimum_chrome_version": "48",
-   "name": "FreeImageZoom",
-   "short_name": "FreeImageZoom",
+   "minimum_chrome_version": "22",
+   "name": "__MSG_extName__",
+   "optional_permissions": [ "history", "tabs" ],
    "options_page": "html/options.html",
+   "options_ui": {
+      "chrome_style": false,
+      "open_in_tab": true,
+      "page": "html/options.html"
+   },
    "page_action": {
       "default_icon": "images/icon19.png",
       "default_popup": "html/popup.html",
       "default_title": "FreeImageZoom"
    },
-   "permissions": [ "tabs", "webRequest", "webRequestBlocking", "*://*/*", "cookies", "history", "notifications", "webNavigation", "storage", "unlimitedStorage" ],
+   "permissions": [ "*://*/*", "notifications", "unlimitedStorage" ],
+   "short_name": "__MSG_extShortName__",
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.0.12",
-   "web_accessible_resources": [ "images/loading.gif", "images/wm-gallery.png", "images/icon16.png", "images/white.png", "js/jquery.min.js", "js/jquery-ui.min.js", "js/common.js", "js/options.js", "js/g-plusone.js" ]
+   "version": "0.1.0",
+   "web_accessible_resources": [ "images/loading.gif", "js/libs/gumby.min.js", "js/libs/jquery-2.1.1.min.js", "js/libs/jquery.mobile.custom.min.js", "js/libs/modernizr-2.7.1.min.js", "js/common.js", "js/options.js" ]
 }
