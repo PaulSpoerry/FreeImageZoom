@@ -1,7 +1,7 @@
 ﻿{
     "extDescription":{
-      "description": "Extension description (max. 132 chars)",
-      "message":"Enlarge thumbnails on mouse over."
+      "description": "Extension description (max. 45 chars)",
+      "message":"Enlarge thumbnails on mouse over"
     },
     "popDisableForAllSites":{
       "description": "[popup] Disables the extension",

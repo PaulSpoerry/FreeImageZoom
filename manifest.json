@@ -447,7 +447,7 @@
    "content_security_policy": "script-src 'self' https://apis.google.com https://ssl.google-analytics.com; object-src 'self'",
     "default_locale":"en",
    "description": "__MSG_extDescription__",
-   "homepage_url": "http://www.PaulSpoerry.com/",
+   "homepage_url": "http://paulspoerry.github.io/FreeImageZoom",
    "icons": {
       "128": "images/icon128.png",
       "16": "images/icon16.png",
@@ -455,8 +455,9 @@
       "48": "images/icon48.png"
    },
    "manifest_version": 2,
-   "minimum_chrome_version": "21",
+   "minimum_chrome_version": "48",
    "name": "FreeImageZoom",
+   "short_name": "FreeImageZoom",
    "options_page": "html/options.html",
    "page_action": {
       "default_icon": "images/icon19.png",
@@ -465,6 +466,6 @@
    },
    "permissions": [ "tabs", "webRequest", "webRequestBlocking", "*://*/*", "cookies", "history", "notifications", "webNavigation", "storage", "unlimitedStorage" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.0.10",
+   "version": "0.0.12",
    "web_accessible_resources": [ "images/loading.gif", "images/wm-gallery.png", "images/icon16.png", "images/white.png", "js/jquery.min.js", "js/jquery-ui.min.js", "js/common.js", "js/options.js", "js/g-plusone.js" ]
 }

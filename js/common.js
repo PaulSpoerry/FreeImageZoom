@@ -131,11 +131,11 @@ function showUpdateNotification() {
             options = {
                 type: 'list',
                 iconUrl: '/images/icon128.png',
-                title: 'Hover Zoom has been updated',
+                title: 'FreeImageZoom has been updated',
                 message: '',
                 items: [
-                    { title: "Imgur gifv support", message: ""},
-                    { title: "Fix for HTTPS Imgur albums", message: ""}
+                    { title: "Updated version numbers, added shortname", message: ""},
+                    { title: "Adjustments for Chrome store settings", message: ""}
                 ]
             };
         chrome.notifications.create(notifId, options, function(id){});
