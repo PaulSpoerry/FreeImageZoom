@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2012 Romain Vallet <romain.vallet@gmail.com>
-// Licensed under the MIT license, read license.txt
-
-var hoverZoomPlugins = hoverZoomPlugins || [];
+﻿var hoverZoomPlugins = hoverZoomPlugins || [];
 hoverZoomPlugins.push({
-    name:'Twitpic (a)',
+    name:'Twitpic',
     version:'0.2',
     prepareImgLinks:function (callback) {
         var res = [];

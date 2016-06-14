@@ -8,7 +8,7 @@
       "matches": [ "\u003Call_urls>" ]
    }, {
       "all_frames": true,
-      "js": [ "plugins/imgur_a.js", "plugins/flickr_a.js", "plugins/tumblr_a.js", "plugins/picasa_a.js", "plugins/imageshack_a.js", "plugins/mediawiki_a.js", "plugins/wordpress_a.js", "plugins/vbulletin_a.js", "plugins/photoshop_a.js", "plugins/instagram_a.js", "plugins/deviantart_a.js", "plugins/youtube_a.js", "plugins/gravatar_a.js", "plugins/gallery_a.js", "plugins/ipboard_a.js", "plugins/streamable_a.js", "plugins/vine_a.js", "plugins/twitter_a.js" ],
+      "js": [ "plugins/imgur_a.js", "plugins/slimg_a.js", "plugins/flickr_a.js", "plugins/tumblr_a.js", "plugins/picasa_a.js", "plugins/imageshack_a.js", "plugins/mediawiki_a.js", "plugins/wordpress_a.js", "plugins/vbulletin_a.js", "plugins/photoshop_a.js", "plugins/instagram_a.js", "plugins/deviantart_a.js", "plugins/youtube_a.js", "plugins/gravatar_a.js", "plugins/gallery_a.js", "plugins/ipboard_a.js", "plugins/streamable_a.js", "plugins/vine_a.js", "plugins/twitter_a.js" ],
       "matches": [ "\u003Call_urls>" ]
    }, {
       "all_frames": true,
@@ -486,6 +486,6 @@
    "permissions": [ "*://*/*", "notifications", "unlimitedStorage" ],
    "short_name": "__MSG_extShortName__",
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.1.0",
+   "version": "0.1.5",
    "web_accessible_resources": [ "images/loading.gif", "js/libs/gumby.min.js", "js/libs/jquery-2.1.1.min.js", "js/libs/jquery.mobile.custom.min.js", "js/libs/modernizr-2.7.1.min.js", "js/common.js", "js/options.js" ]
 }

@@ -1,7 +1,4 @@
-﻿// Copyright (c) 2013 Romain Vallet <romain.vallet@gmail.com>
-// Licensed under the MIT license, read license.txt
-
-var hoverZoomPlugins = hoverZoomPlugins || [];
+﻿var hoverZoomPlugins = hoverZoomPlugins || [];
 hoverZoomPlugins.push({
     name:'YouTube',
     prepareImgLinks:function (callback) {
@@ -69,7 +66,7 @@ hoverZoomPlugins.push({
                     return;
                 }
                 var sources = decodeStreamMap(video.url_encoded_fmt_stream_map);
-                var src = getSource(sources, "webm", "high") || getSource(sources, "mp4", "high");
+                var src = getSource(sources, "webm", "hd720") || getSource(sources, "mp4", "hd720");
                 if (src) {
                     link.data().hoverZoomSrc = [start ? src.url + '#t=' + start : src.url];
                     link.addClass('hoverZoomLink');

@@ -1,7 +1,4 @@
-﻿// Copyright (c) 2013 Romain Vallet <romain.vallet@gmail.com>
-// Licensed under the MIT license, read license.txt
-
-var hoverZoomPlugins = hoverZoomPlugins || [];
+﻿var hoverZoomPlugins = hoverZoomPlugins || [];
 hoverZoomPlugins.push({
     name:'Imgur',
     prepareImgLinks:function (callback) {
@@ -23,10 +20,7 @@ hoverZoomPlugins.push({
 
         function prepareImgLink() {
             var link = $(this), data = link.data(), href = link.attr('href');
-            if (href.indexOf('gallery') == -1 && data.hoverZoomSrc) {
-                return;
-            }
-            if (href.indexOf('gallery') != -1 && data.hoverZoomGallerySrc) {
+            if (data.hoverZoomSrc || data.hoverZoomGallerySrc) {
                 return;
             }
 
@@ -52,6 +46,7 @@ hoverZoomPlugins.push({
                             data.hoverZoomGallerySrc = [];
                             data.hoverZoomGalleryCaption = [];
 
+                            // Future alternative: https://imgur.com/ajaxalbums/getimages/{hash}/hit.json?all=true
                             var albumUrl = 'https://api.imgur.com/3/album/' + hash + '.json';
                             $.ajax(albumUrl, {headers: {"Authorization": "Client-ID 1d8d9b36339e0e2"}}).done(function (imgur) {
                                 if (imgur.error) {
@@ -87,9 +82,13 @@ hoverZoomPlugins.push({
                             }).fail(function(jqXHR) {
                                 if (jqXHR.status === 429) {
                                     console.info("imgur.com is enforcing rate limiting on hoverzoom+ extension. Album preview won't work until this problem is resolved.");
+                                    return;
                                 }
-                                // data.hoverZoomSrc = createUrls(hash);
-                                // link.addClass('hoverZoomLink');
+                                // Unfortunately /gallery/ can be both album or a single image. If album is not found then try it as a single image instead.
+                                if (view === 'gallery' && jqXHR.status === 404) {
+                                    data.hoverZoomSrc = createUrls(hash);
+                                    link.addClass('hoverZoomLink');
+                                }
                             });
                             break;
                         case undefined:
@@ -105,7 +104,7 @@ hoverZoomPlugins.push({
         $('a[href*="//imgur.com/"], a[href*="//www.imgur.com/"], a[href*="//i.imgur.com/"], a[href*="//m.imgur.com/"]').each(prepareImgLink);
 
         // On imgur.com (galleries, etc)
-        if (window.location.host.indexOf('imgur.com') > -1) {
+        if (window.location.host.indexOf('imgur.com') !== -1) {
             hoverZoom.urlReplace(res, 'a img[src*="b."]', 'b.', '.');
             $('a[href*="/gallery/"]').each(prepareImgLink);
         }

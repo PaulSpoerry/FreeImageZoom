@@ -1,4 +1,5 @@
 var options,
+    hoverZoomPlugins = hoverZoomPlugins || [],
     VK_CTRL = 1024,
     VK_SHIFT = 2048,
     actionKeys = ['actionKey', 'hideKey', 'openImageInWindowKey', 'openImageInTabKey', 'saveImageKey', 'fullZoomKey', 'prevImgKey', 'nextImgKey'];
@@ -69,7 +70,9 @@ function loadKeys(sel) {
 // TODO: Migrate to https://developer.chrome.com/extensions/storage
 function saveOptions() {
     options.extensionEnabled = $('#chkExtensionEnabled')[0].checked;
+    options.zoomFactor = $('#txtZoomFactor')[0].value;
     options.zoomVideos = $('#chkZoomVideos')[0].checked;
+    options.videoPositionStep = $('#txtVideoPositionStep')[0].value;
     options.muteVideos = $('#chkMuteVideos')[0].checked;
     options.videoVolume = $('#txtVideoVolume')[0].value / 100;
     options.mouseUnderlap = $('#chkMouseUnderlap')[0].checked;
@@ -78,6 +81,7 @@ function saveOptions() {
     options.showWhileLoading = $('#chkShowWhileLoading')[0].checked;
     options.showHighRes = $('#chkShowHighRes')[0].checked;
     options.galleriesMouseWheel = $('#chkGalleriesMouseWheel')[0].checked;
+    options.disableMouseWheelForVideo = $('#chkDisableMouseWheelForVideo')[0].checked;
     options.displayDelay = getMilliseconds($('#txtDisplayDelay'));
     options.displayDelayVideo = getMilliseconds($('#txtDisplayDelayVideo'));
     options.fadeDuration = getMilliseconds($('#txtFadeDuration'));
@@ -87,6 +91,12 @@ function saveOptions() {
     options.excludedSites = [];
     $('#selExcludedSites').find('span').each(function () {
         options.excludedSites.push($(this).text());
+    });
+
+    options.disabledPlugins = [];
+    $('.chkPlugin').each(function () {
+        var self = $(this);
+        if (!self.is(':checked')) options.disabledPlugins.push(self.attr('id').substr('chkPlugin'.length));
     });
 
     actionKeys.forEach(function(key) {
@@ -113,7 +123,9 @@ function restoreOptions() {
     options = loadOptions();
 
     $('#chkExtensionEnabled')[0].checked = options.extensionEnabled;
+    $('#txtZoomFactor')[0].value = options.zoomFactor;
     $('#chkZoomVideos')[0].checked = options.zoomVideos;
+    $('#txtVideoPositionStep')[0].value = options.videoPositionStep;
     $('#chkMuteVideos')[0].checked = options.muteVideos;
     $('#txtVideoVolume').val(options.videoVolume * 100);
     $('#chkMouseUnderlap')[0].checked = options.mouseUnderlap;
@@ -122,6 +134,7 @@ function restoreOptions() {
     $('#chkShowWhileLoading')[0].checked = options.showWhileLoading;
     $('#chkShowHighRes')[0].checked = options.showHighRes;
     $('#chkGalleriesMouseWheel')[0].checked = options.galleriesMouseWheel;
+    $('#chkDisableMouseWheelForVideo')[0].checked = options.disableMouseWheelForVideo;
     $('#txtDisplayDelay').val((options.displayDelay || 0) / 1000);
     $('#txtDisplayDelayVideo').val((options.displayDelayVideo || 0) / 1000);
     $('#txtFadeDuration').val((options.fadeDuration || 0) / 1000);
@@ -199,7 +212,7 @@ function chkAddToHistoryModeOnChange() {
 function percentageOnChange() {
     var value = parseInt(this.value);
     if (isNaN(value)) value = 100;
-    if (value < 0) value = 0;
+    if (value < 1) value = 1;
     if (value > 100) value = 100;
     this.value = value;
 }
@@ -212,6 +225,48 @@ function onMessage(message, sender, callback) {
     }
 }
 
+function getPlugins(callback) {
+    chrome.runtime.getPackageDirectoryEntry(function(root) {
+        root.getDirectory("plugins", {create: false}, function(pluginsdir) {
+            var reader = pluginsdir.createReader();
+            var entries = [];
+            var readEntries = function() {
+                reader.readEntries(function(results) {
+                    if (results.length) {
+                        entries = entries.concat(results.map(function(de){return de.name;}));
+                        readEntries();
+                    } else {
+                        callback(entries);
+                    }
+                });
+            };
+            readEntries();
+        });
+    });
+}
+
+function loadPlugins() {
+    getPlugins(function(plugins) {
+        plugins.forEach(function(plugin) {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = '../plugins/' + plugin;
+            document.body.appendChild(script);
+        });
+        window.setTimeout(populatePluginsTable, 500);
+    });
+}
+
+function populatePluginsTable() {
+    var plugins = $.unique(hoverZoomPlugins.map(function(plugin) {return plugin.name}));
+    plugins.forEach(function(plugin) {
+        var chkName = 'chkPlugin' + plugin.replace(/[^\w]/g, '').toLowerCase();
+        $('<div class="field"><label class="checkbox" for="' + chkName + '"><input type="checkbox" id="' + chkName + '" class="chkPlugin"><span></span>&nbsp;<div style="display:inline">' + plugin + '</div></label></div>').appendTo('#tblPlugins');
+        $('#' + chkName)[0].checked = !options.disabledPlugins.includes(chkName.substr('chkPlugin'.length));
+    });
+    Gumby.initialize('checkbox');
+}
+
 $(function () {
     initActionKeys();
     i18n();
@@ -222,14 +277,17 @@ $(function () {
     $('#btnReset').click(restoreOptions);
     $('#chkWhiteListMode').parent().on('gumby.onChange', chkWhiteListModeOnChange);
     $('#chkAddToHistory').parent().on('gumby.onChange', chkAddToHistoryModeOnChange);
+    $('#txtZoomFactor').change(percentageOnChange);
     $('#txtPicturesOpacity').change(percentageOnChange);
     $('#txtVideoVolume').change(percentageOnChange);
+    $('#txtVideoPositionStep').change(percentageOnChange);
     $('.actionKey').change(selKeyOnChange);
     $('#btnAddExcludedSite').click(btnAddExcludedSiteOnClick);
     $('#btnRemoveExcludedSite').click(btnRemoveExcludedSiteOnClick);
     $('#aShowUpdateNotification').click(showUpdateNotification);
 
     restoreOptions();
+    loadPlugins();
 
     chrome.runtime.onMessage.addListener(onMessage);
 });

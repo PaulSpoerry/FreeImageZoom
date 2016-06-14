@@ -8,13 +8,16 @@ function loadOptions() {
     options = JSON.parse(localStorage.options);  // TODO: Migrate to https://developer.chrome.com/extensions/storage
 
     options.extensionEnabled = options.hasOwnProperty('extensionEnabled') ? options.extensionEnabled : true;
+    options.zoomFactor = options.hasOwnProperty('zoomFactor') ? options.zoomFactor : 1;
     options.zoomVideos = options.hasOwnProperty('zoomVideos') ? options.zoomVideos : true;
+    options.videoPositionStep = options.hasOwnProperty('videoPositionStep') ? options.videoPositionStep : 10;
     options.muteVideos = options.hasOwnProperty('muteVideos') ? options.muteVideos : false;
     options.videoVolume = options.hasOwnProperty('videoVolume') ? options.videoVolume : 0.25;
     options.pageActionEnabled = options.hasOwnProperty('pageActionEnabled') ? options.pageActionEnabled : true;
     options.showCaptions = options.hasOwnProperty('showCaptions') ? options.showCaptions : true;
     options.showHighRes = options.hasOwnProperty('showHighRes') ? options.showHighRes : true;
     options.galleriesMouseWheel = options.hasOwnProperty('galleriesMouseWheel') ? options.galleriesMouseWheel : true;
+    options.disableMouseWheelForVideo = options.hasOwnProperty('disableMouseWheelForVideo') ? options.disableMouseWheelForVideo : false;
     options.addToHistory = options.hasOwnProperty('addToHistory') ? options.addToHistory : false;
     options.alwaysPreload = options.hasOwnProperty('alwaysPreload') ? options.alwaysPreload : false;
     options.displayDelay = options.hasOwnProperty('displayDelay') ? options.displayDelay : 100;
@@ -29,6 +32,7 @@ function loadOptions() {
     options.filterNSFW = options.hasOwnProperty('filterNSFW') ? options.filterNSFW : false;
     options.enableGalleries = options.hasOwnProperty('enableGalleries') ? options.enableGalleries : true;
     options.ambilightEnabled = options.hasOwnProperty('ambilightEnabled') ? options.ambilightEnabled : false;
+    options.disabledPlugins = options.hasOwnProperty('disabledPlugins') ? options.disabledPlugins : [];
 
     // Action keys
     options.actionKey = options.hasOwnProperty('actionKey') ? options.actionKey : 0;
@@ -107,7 +111,7 @@ function showUpdateNotification() {
             message: '',
             iconUrl: '/images/icon32.png',
             items: [
-                { title: "Store compatibility changes. Fetlife enhancements.", message: "" }
+                { title: "Ambient light for images, plugins, and more.", message: "" }
             ]
         };
         chrome.notifications.create(chrome.i18n.getMessage('extName'), options, function(id) {});

@@ -43,6 +43,14 @@
       "description": "[options] Save button label",
       "message": "Save"
    },
+   "optDisableMouseWheelForVideo": {
+      "description": "[options] Allows you to scroll through albums with the mousewheel but does not change behavior of GFY/Videos",
+      "message": "Don't use mousewheel to navigate within video (action keys will still work)"
+   },
+   "optDisableMouseWheelForVideoTooltip": {
+      "description": "[options] Allows you to scroll through albums with the mousewheel but does not change behavior of GFY/Videos",
+      "message": "Scroll through albums but don't jump forward/backward in videos"
+   },
    "optDisplayDelay": {
       "description": "[options] Delay before displaying a picture option",
       "message": "Delay before displaying a picture:"
@@ -179,6 +187,10 @@
       "description": "[options] Page title for general options",
       "message": "General"
    },
+   "optPagePlugins": {
+      "description": "[options] Page title for plugin options",
+      "message": "Plugins"
+   },
    "optPageSites": {
       "description": "[options] Page title for site options",
       "message": "Sites"
@@ -186,6 +198,10 @@
    "optPicturesOpacity": {
       "description": "[options] Zoomed pictures opacity option",
       "message": "Zoomed pictures opacity:"
+   },
+   "optPlugins": {
+      "description": "[options] Section which contains checkboxes for disabling plugins",
+      "message": "Enable/disable specific plugins"
    },
    "optPrevImgKeyDescription": {
       "description": "[options] Action key description",
@@ -222,6 +238,10 @@
    "optSectionSitesEnabled": {
       "description": "[options] Page section for enabling extension for specific sites",
       "message": "URLs for which FreeImageZoom must be enabled"
+   },
+   "optSectionVideo": {
+      "description": "[options] Page section for video options",
+      "message": "Video"
    },
    "optSectionView": {
       "description": "[options] Page section for view options",
@@ -271,6 +291,18 @@
       "description": "[options] Show update notifications option",
       "message": "Show update notifications"
    },
+   "optVideoPositionStep": {
+      "description": "[options] Changing video position amount option",
+      "message": "Use prev/next action keys (or mousewheel) to change video position by"
+   },
+   "optVideoPositionStepTooltip": {
+      "description": "[options] Tooltip for changing video position option",
+      "message": "Skip video back or forth for this amount of seconds"
+   },
+   "optVideoPositionStepUnitName": {
+      "description": "[options] Unit name (seconds) for changing video position option",
+      "message": "sec"
+   },
    "optVideoVolume": {
       "description": "[options] Audio volume for unmuted videos option",
       "message": "Audio volume for unmuted videos:"
@@ -279,7 +311,7 @@
       "description": "[options] Tooltip for audio volume for unmuted videos option",
       "message": "If the video is not completely muted, set the volume to this percentage (0-100)"
    },
-   "optVolumeUnitName": {
+   "optVideoVolumeUnitName": {
       "description": "[options] Unit name (percentage) for video volume option",
       "message": "%"
    },
@@ -290,6 +322,18 @@
    "optWhitelistModeTooltip": {
       "description": "[options] Tooltip for whitelist mode checkbox",
       "message": "Only enable FreeImageZoom for the sites listed below"
+   },
+   "optZoomFactor": {
+      "description": "[options] Adjust the size of zoomed images option",
+      "message": "Enlarge zoomed images by this factor:"
+   },
+   "optZoomFactorTooltip": {
+      "description": "[options] Tooltip for adjust the size of zoomed images option",
+      "message": "Multiply the size of zoomed images by this amount"
+   },
+   "optZoomFactorUnitName": {
+      "description": "[options] Unit name (percentage) for zoomed images size option",
+      "message": "times"
    },
    "optZoomVideos": {
       "description": "[options] Zoom videos (WebM, MP4) option",

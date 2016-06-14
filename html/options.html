@@ -16,6 +16,7 @@
         <section class="tabs pill">
             <ul class="tab-nav">
                 <li class="active"><a href="#" data-i18n="optPageGeneral"></a></li>
+                <li><a href="#" data-i18n="optPagePlugins"></a></li>
                 <li><a href="#" data-i18n="optPageSites"></a></li>
                 <li><a href="#" data-i18n="optPageActionKeys"></a></li>
                 <li><a href="#" data-i18n="optPageAdvanced"></a></li>
@@ -29,6 +30,12 @@
                     <fieldset>
                         <legend data-i18n="optSectionView"></legend>
                         <ul>
+                            <div class="ttip" data-i18n-tooltip="optZoomFactorTooltip">
+                                <li class="append field"><label class="inline" for="txtZoomFactor">
+                                    <div style="display:inline" data-i18n="optZoomFactor"></div>
+                                    <input class="xnarrow text input" type="text" id="txtZoomFactor"><span class="adjoined" data-i18n="optZoomFactorUnitName"></span>
+                                </label></li>
+                            </div>
                             <div class="ttip" data-i18n-tooltip="optMouseUnderlapTooltip">
                                 <li class="field"><label class="checkbox" for="chkMouseUnderlap">
                                     <input type="checkbox" id="chkMouseUnderlap"><span></span>
@@ -65,10 +72,33 @@
                                     <div style="display:inline" data-i18n="optGalleriesMouseWheel"></div>
                                 </label></li>
                             </div>
+                            <div class="ttip" data-i18n-tooltip="optEnableAmbilightTooltip">
+                                <li class="field"><label class="checkbox" for="chkAmbilightEnabled">
+                                    <input type="checkbox" id="chkAmbilightEnabled"><span></span>
+                                    <div style="display:inline" data-i18n="optEnableAmbilight"></div>
+                                </label></li>
+                            </div>
+                        </ul>
+                    </fieldset>
+                    <fieldset>
+                        <legend data-i18n="optSectionVideo"></legend>
+                        <ul>
                             <div class="ttip" data-i18n-tooltip="optZoomVideosTooltip">
                                 <li class="field"><label class="checkbox" for="chkZoomVideos">
                                     <input type="checkbox" id="chkZoomVideos"><span></span>
                                     <div style="display:inline" data-i18n="optZoomVideos"></div>
+                                </label></li>
+                            </div>
+                            <div class="ttip" data-i18n-tooltip="optVideoPositionStepTooltip">
+                                <li class="append field"><label class="inline" for="txtVideoPositionStep">
+                                    <div style="display:inline" data-i18n="optVideoPositionStep"></div>
+                                    <input class="xnarrow text input" type="text" id="txtVideoPositionStep"><span class="adjoined" data-i18n="optVideoPositionStepUnitName"></span>
+                                </label></li>
+                            </div>
+                            <div class="ttip" data-i18n-tooltip="optDisableMouseWheelForVideoTooltip">
+                                <li class="field"><label class="checkbox" for="chkDisableMouseWheelForVideo">
+                                    <input type="checkbox" id="chkDisableMouseWheelForVideo"><span></span>
+                                    <div style="display:inline" data-i18n="optDisableMouseWheelForVideo"></div>
                                 </label></li>
                             </div>
                             <div class="ttip" data-i18n-tooltip="optMuteVideosTooltip">
@@ -80,13 +110,7 @@
                             <div class="ttip" data-i18n-tooltip="optVideoVolumeTooltip">
                                 <li class="append field"><label class="inline" for="txtVideoVolume">
                                     <div style="display:inline" data-i18n="optVideoVolume"></div>
-                                    <input class="xnarrow text input" type="text" id="txtVideoVolume"><span class="adjoined" data-i18n="optVolumeUnitName"></span>
-                                </label></li>
-                            </div>
-                            <div class="ttip" data-i18n-tooltip="optEnableAmbilightTooltip">
-                                <li class="field"><label class="checkbox" for="chkAmbilightEnabled">
-                                    <input type="checkbox" id="chkAmbilightEnabled"><span></span>
-                                    <div style="display:inline" data-i18n="optEnableAmbilight"></div>
+                                    <input class="xnarrow text input" type="text" id="txtVideoVolume"><span class="adjoined" data-i18n="optVideoVolumeUnitName"></span>
                                 </label></li>
                             </div>
                         </ul>
@@ -107,6 +131,14 @@
                                 <input class="xnarrow text input" type="text" id="txtFadeDuration"><span class="adjoined" data-i18n="optDurationUnitName"></span>
                             </label></li>
                         </ul>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="tab-content">
+                <form>
+                    <fieldset>
+                        <legend data-i18n="optPlugins"></legend>
+                        <ul id="tblPlugins"></ul>
                     </fieldset>
                 </form>
             </div>
