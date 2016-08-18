@@ -406,7 +406,7 @@ var hoverZoom = {
                             clearTimeout(loadFullSizeImageTimeout);
 
                             // If the action key has been pressed over an image, no delay is applied
-                            var delay = explicitCall ? 0 : (isVideoLink(imgDetails.url) ? options.displayDelayVideo : options.displayDelay);
+                            var delay = actionKeyDown || explicitCall ? 0 : (isVideoLink(imgDetails.url) ? options.displayDelayVideo : options.displayDelay);
                             loadFullSizeImageTimeout = setTimeout(loadFullSizeImage, delay);
 
                             loading = true;
@@ -449,7 +449,12 @@ var hoverZoom = {
                     video.src = imgDetails.url;
                     imgFullSize = $(video).appendTo(hz.hzImg);
                     video.addEventListener('error', imgFullSizeOnError);
-                    video.addEventListener('loadedmetadata', posImg);
+                    video.addEventListener('loadedmetadata', function() {
+                        posImg();
+                        if (options.videoTimestamp) {
+                            addTimestampTrack(video);
+                        }
+                    });
                     video.addEventListener('loadeddata', function() {
                         imgFullSizeOnLoad();
                         video.play();
@@ -470,6 +475,32 @@ var hoverZoom = {
                 posImg();
             }
             posImg();
+        }
+        function addTimestampTrack(video){
+            var track = video.addTextTrack("captions", "English", "en");
+            var duration = Math.ceil(video.duration);
+            var timer = [];
+            for (var time = duration; time >= 0; time--) {
+                var hours = Math.floor(time / 3600);
+                var minutes = Math.floor((time - hours*3600) / 60);
+                var seconds = time % 60;
+                var finalTime = "-";
+                if (hours > 0) {
+                    finalTime += hours + ":";
+                }
+                if (hours > 0 || minutes > 0) {
+                    finalTime += (hours > 0 && minutes < 10 ? "0" : "") + minutes + ":";
+                }
+                finalTime += ((hours > 0 || minutes > 0) && seconds < 10 ? "0" : "") + seconds;
+                timer.push(finalTime);
+            }
+            for (var i = 0; i <= duration; i++) {
+                track.addCue(new VTTCue(i, i == duration ? video.duration : i+1, timer[i]));
+                track.cues[i].align = "end";
+                track.cues[i].position = 100;
+                track.cues[i].line = 0;
+            }
+            track.mode = "showing";
         }
 
         function imgFullSizeOnLoad() {
@@ -935,6 +966,9 @@ var hoverZoom = {
             $(document).mousemove(documentMouseMove).mouseleave(cancelImageLoading).mousedown(documentMouseDown).keydown(documentOnKeyDown).keyup(documentOnKeyUp);
             if (options.galleriesMouseWheel) {
                 $(document).on('mousewheel', documentOnMouseWheel);
+            }
+            if (options.zoomVideos) {
+                $(document).on('visibilitychange', hideHoverZoomImg);
             }
         }
 

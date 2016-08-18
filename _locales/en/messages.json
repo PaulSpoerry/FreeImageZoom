@@ -303,6 +303,14 @@
       "description": "[options] Unit name (seconds) for changing video position option",
       "message": "sec"
    },
+   "optVideoTimestamp": {
+      "description": "[options] Enable timestamp / video length on videos",
+      "message": "Show timestamp on videos"
+   },
+   "optVideoTimestampTooltip": {
+      "description": "[options] Tooltip for video length countdown on videos",
+      "message": "Enable timestamp / video length on videos"
+   },
    "optVideoVolume": {
       "description": "[options] Audio volume for unmuted videos option",
       "message": "Audio volume for unmuted videos:"

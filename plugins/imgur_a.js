@@ -24,11 +24,16 @@ hoverZoomPlugins.push({
                 return;
             }
 
+            if (-1 !== href.indexOf('i.stack.imgur.com')) {
+                data.hoverZoomSrc = [href.replace('http:', window.location.protocol)];
+                res.push(link);
+                return;
+            }
             if (options.zoomVideos && (href.substr(-3) == 'gif' || href.substr(-4) == 'gifv')) {
-                data.hoverZoomSrc = [href.replace(/\.gifv?/, '.webm'), href.replace(/\.gifv?/, '.mp4'), href];
+                data.hoverZoomSrc = [href.replace(/\.gifv?/, '.mp4'), href.replace(/\.gifv?/, '.webm'), href];
                 res.push(link);
             } else {
-                var matches = href.match(/(?:\/(a|gallery|signin))?\/([^\W_]{5,8})(?:\/|\.[a-zA-Z]+|#([^\W_]{5,8}|\d+))?(\/new|\/all|\?\d*)?$/);
+                var matches = href.match(/(?:\/(a|gallery|signin))?\/([^\W_]{5,8})(?:\/|\.[a-zA-Z]+|#([^\W_]{5,8}|\d+))?(\/new|\/all|\?.*)?$/);
                 if (matches && matches[2]) {
                     var view = matches[1];
                     var hash = matches[2];
@@ -55,7 +60,7 @@ hoverZoomPlugins.push({
                                 } else {
                                     imgur.data.images.forEach(function (img, index) {
                                         var urls = [img.link],
-                                            caption = img.title,
+                                            caption = img.title != null ? img.title : '',
                                             alreadyAdded = false;
                                         for (var i=0, l=data.hoverZoomGallerySrc.length; i<l; i++) {
                                             if (data.hoverZoomGallerySrc[i].indexOf(urls[0]) != -1) {
@@ -64,10 +69,12 @@ hoverZoomPlugins.push({
                                             }
                                         }
                                         if (!alreadyAdded) {
+                                            if (img.description != null) {
                                             if (caption != '' && img.description != '') {
                                                 caption += ';\n';
                                             }
                                             caption += img.description;
+                                            }
                                             data.hoverZoomGalleryCaption.push(htmlDecode(caption));
                                             data.hoverZoomGallerySrc.push(urls);
                                             data.hoverZoomSrc = undefined;
@@ -101,7 +108,7 @@ hoverZoomPlugins.push({
         }
 
         // Every sites
-        $('a[href*="//imgur.com/"], a[href*="//www.imgur.com/"], a[href*="//i.imgur.com/"], a[href*="//m.imgur.com/"]').each(prepareImgLink);
+        $('a[href*="//imgur.com/"], a[href*="//www.imgur.com/"], a[href*="//i.imgur.com/"], a[href*="//m.imgur.com/"], a[href*="//i.stack.imgur.com/"]').each(prepareImgLink);
 
         // On imgur.com (galleries, etc)
         if (window.location.host.indexOf('imgur.com') !== -1) {
