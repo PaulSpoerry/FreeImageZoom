@@ -486,6 +486,6 @@
    "permissions": [ "*://*/*", "notifications", "unlimitedStorage" ],
    "short_name": "__MSG_extShortName__",
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.1.89",
+   "version": "0.1.91",
    "web_accessible_resources": [ "images/loading.gif", "js/libs/gumby.min.js", "js/libs/jquery-2.1.1.min.js", "js/libs/jquery.mobile.custom.min.js", "js/libs/modernizr-2.7.1.min.js", "js/common.js", "js/options.js" ]
 }

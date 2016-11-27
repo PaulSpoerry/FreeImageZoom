@@ -11,7 +11,7 @@ hoverZoomPlugins.push({
             //return srcs.concat(srcs).concat(srcs).concat(srcs);
             return srcs;
         }
-        
+
         function htmlDecode(input){
             var e = document.createElement('div');
             e.innerHTML = input;
@@ -24,11 +24,14 @@ hoverZoomPlugins.push({
                 return;
             }
 
+            // special case for StackOverflow custom subdomain
             if (-1 !== href.indexOf('i.stack.imgur.com')) {
                 data.hoverZoomSrc = [href.replace('http:', window.location.protocol)];
                 res.push(link);
+
                 return;
             }
+
             if (options.zoomVideos && (href.substr(-3) == 'gif' || href.substr(-4) == 'gifv')) {
                 data.hoverZoomSrc = [href.replace(/\.gifv?/, '.mp4'), href.replace(/\.gifv?/, '.webm'), href];
                 res.push(link);
@@ -41,7 +44,7 @@ hoverZoomPlugins.push({
                     if (excl.indexOf(hash) > -1) {
                         return;
                     }
-                    
+
                     switch (view) {
                         case 'signin':
                             return;
@@ -70,10 +73,10 @@ hoverZoomPlugins.push({
                                         }
                                         if (!alreadyAdded) {
                                             if (img.description != null) {
-                                            if (caption != '' && img.description != '') {
-                                                caption += ';\n';
-                                            }
-                                            caption += img.description;
+                                                if (caption != '' && img.description != '') {
+                                                    caption += ';\n';
+                                                }
+                                                caption += img.description;
                                             }
                                             data.hoverZoomGalleryCaption.push(htmlDecode(caption));
                                             data.hoverZoomGallerySrc.push(urls);

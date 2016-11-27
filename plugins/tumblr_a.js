@@ -28,9 +28,9 @@ hoverZoomPlugins.push({
                     if (width < 500) {
                         urls.push(url.replace('maxwidth', '500'));
                     }            
-                        link.data().hoverZoomSrc = urls;
-                        link.addClass('hoverZoomLink');
-                        hoverZoom.displayPicFromElement(link);
+                    link.data().hoverZoomSrc = urls;
+                    link.addClass('hoverZoomLink');
+                    hoverZoom.displayPicFromElement(link);
                 });
         });
         hoverZoom.urlReplace(res,

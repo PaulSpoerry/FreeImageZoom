@@ -476,9 +476,12 @@ var hoverZoom = {
             }
             posImg();
         }
+
         function addTimestampTrack(video){
             var track = video.addTextTrack("captions", "English", "en");
             var duration = Math.ceil(video.duration);
+            // create an array that hosts the times from decending order
+            // TODO: see if there is a way to optimize this as it causes a small lag
             var timer = [];
             for (var time = duration; time >= 0; time--) {
                 var hours = Math.floor(time / 3600);
@@ -767,6 +770,104 @@ var hoverZoom = {
             }
         }
 
+
+         // Callback function called by plugins after they finished preparing the links
+        function imgLinksPreparedFL(links) {
+            var showPageAction = false;
+            links.each(function () {
+
+var string = $(this)[0].src.split('?')[0].toString();
+var result = string.substring(0, string.lastIndexOf("/") + 1);
+
+
+//$('<div id="hoverHideTemp" style="display: none;"></div>').prependTo('body');
+$('<div id="hoverHideTemp"></div>').prependTo('body');
+
+$("#hoverHideTemp").load(result + " .fl-picture img:first", function(response, status, xhr) {
+
+    $("#hoverHideTemp").text( $(this)[0].firstElementChild.src );
+    // error handling
+    if(status == "error") {
+        $("#content").html("An error occured: " + xhr.status + " " + xhr.statusText);
+    }
+});
+
+console.log($("#hoverHideTemp"));
+
+
+
+
+
+
+
+                var link = $(this),
+                    linkData = link.data();
+                if (!linkData.hoverZoomSrc && !linkData.hoverZoomGallerySrc) {
+
+                    prepareImgLinksAsync(true);
+
+                } else {
+
+                    // Skip if the image has the same URL as the thumbnail.
+                    //try {
+                    if (linkData.hoverZoomSrc) {
+                        var url = linkData.hoverZoomSrc[0],
+                            skip = (url == link.attr('src'));
+                        if (!skip) {
+                            link.find('img[src]').each(function () {
+                                if (this.src == url) {
+                                    skip = true;
+                                }
+                            });
+                        }
+                        if (skip) {
+                            return;
+                        }
+                    }
+                    
+
+                    showPageAction = true;
+
+                    // If the extension is disabled or the site is excluded, we only need to know
+                    // whether the page action needs to be shown or not.
+                    if (!options.extensionEnabled || isExcludedSite()) {
+                        return;
+                    }
+
+                    link.addClass('hoverZoomLink');
+
+                    // Convert URL special characters
+                    /*var srcs = linkData.hoverZoomSrc;
+                     for (var i=0; i<srcs.length; i++) {
+                     srcs[i] = deepUnescape(srcs[i]);
+                     }
+                     linkData.hoverZoomSrc = srcs;*/
+                    if (linkData.hoverZoomGallerySrc) {
+                        if (!linkData.hoverZoomGalleryIndex)
+                            linkData.hoverZoomGalleryIndex = 0;
+                        linkData.hoverZoomGallerySrc = linkData.hoverZoomGallerySrc.map(function (srcs) {
+                            return srcs.map(deepUnescape);
+                        });
+                        updateImageFromGallery(link);
+                    } else {
+                        linkData.hoverZoomSrc = linkData.hoverZoomSrc.map(deepUnescape);
+                    }
+
+                    linkData.hoverZoomSrcIndex = 0;
+
+                    // Caption
+                    if (options.showCaptions && !options.ambilightEnabled && !linkData.hoverZoomCaption) {
+                        prepareImgCaption(link);
+                    }
+                }
+            });
+
+            if (options.pageActionEnabled && !pageActionShown && showPageAction) {
+                chrome.runtime.sendMessage({action:'showPageAction'});
+                pageActionShown = true;
+            }
+        }
+
         function prepareImgLinks() {
             if (debug) {
                 console.time('prepareImgLinks');
@@ -778,7 +879,11 @@ var hoverZoom = {
 
             for (var i = 0; i < hoverZoomPlugins.length; i++) {
                 if (!options.disabledPlugins.includes(hoverZoomPlugins[i].name.replace(/[^\w]/g, '').toLowerCase()))
+                if (hoverZoomPlugins[i].name === 'fetlife') {
+                    hoverZoomPlugins[i].prepareImgLinks(imgLinksPreparedFL);
+                } else {
                     hoverZoomPlugins[i].prepareImgLinks(imgLinksPrepared);
+                }
             }
             prepareImgLinksTimeout = null;
 

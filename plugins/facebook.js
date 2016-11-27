@@ -89,14 +89,16 @@ hoverZoomPlugins.push({
                 });
             } else {
                 var url = link.attr(attr).replace('photo.php', 'photo/download/');
-            link.data().hoverZoomSrc = [url];
-            link.addClass('hoverZoomLink');
+                link.data().hoverZoomSrc = [url];
+                link.addClass('hoverZoomLink');
             }
         }
+
         $('a[href*="/photo.php"]').one('mouseover', function () {
             var link = $(this);
             fetchPhoto(link, 'href');
         });
+
         $('a[ajaxify*="&fbid="]').one('mouseover', function () {
             var link = $(this);
             fetchPhoto(link, 'ajaxify');

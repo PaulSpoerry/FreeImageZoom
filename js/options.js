@@ -223,6 +223,7 @@ function percentageOnChange() {
 function updateTxtVideoVolume() {
     $('#txtVideoVolume')[0].value = this.value;
 }
+
 function onMessage(message, sender, callback) {
     switch (message.action) {
         case 'optionsChanged':
