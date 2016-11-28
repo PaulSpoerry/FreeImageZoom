@@ -103,7 +103,8 @@ var hoverZoom = {
                 'font-size':'14px',
                 'font-weight':'bold',
                 'color':'white',
-                'text-shadow':'-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black',
+                'padding':'3px',
+                'text-shadow':'-2px -2px 1px black, -2px 0 1px black, -2px 2px 1px black, 0 -2px 1px black, 0 2px 1px black, 2px -2px 1px black, 2px 0 1px black, 2px 2px 1px black',
                 'text-align':'center',
                 'overflow':'hidden',
                 'vertical-align':'top',
@@ -289,7 +290,7 @@ var hoverZoom = {
             titledElements = $('[title]').not('iframe, .lightbox, [rel^="lightbox"]');
             titledElements.each(function () {
                 $(this).data().hoverZoomTitle = this.getAttribute('title');
-                this.removeAttribute('title');
+                this.title = '';
             });
         }
 
@@ -770,104 +771,6 @@ var hoverZoom = {
             }
         }
 
-
-         // Callback function called by plugins after they finished preparing the links
-        function imgLinksPreparedFL(links) {
-            var showPageAction = false;
-            links.each(function () {
-
-var string = $(this)[0].src.split('?')[0].toString();
-var result = string.substring(0, string.lastIndexOf("/") + 1);
-
-
-//$('<div id="hoverHideTemp" style="display: none;"></div>').prependTo('body');
-$('<div id="hoverHideTemp"></div>').prependTo('body');
-
-$("#hoverHideTemp").load(result + " .fl-picture img:first", function(response, status, xhr) {
-
-    $("#hoverHideTemp").text( $(this)[0].firstElementChild.src );
-    // error handling
-    if(status == "error") {
-        $("#content").html("An error occured: " + xhr.status + " " + xhr.statusText);
-    }
-});
-
-console.log($("#hoverHideTemp"));
-
-
-
-
-
-
-
-                var link = $(this),
-                    linkData = link.data();
-                if (!linkData.hoverZoomSrc && !linkData.hoverZoomGallerySrc) {
-
-                    prepareImgLinksAsync(true);
-
-                } else {
-
-                    // Skip if the image has the same URL as the thumbnail.
-                    //try {
-                    if (linkData.hoverZoomSrc) {
-                        var url = linkData.hoverZoomSrc[0],
-                            skip = (url == link.attr('src'));
-                        if (!skip) {
-                            link.find('img[src]').each(function () {
-                                if (this.src == url) {
-                                    skip = true;
-                                }
-                            });
-                        }
-                        if (skip) {
-                            return;
-                        }
-                    }
-                    
-
-                    showPageAction = true;
-
-                    // If the extension is disabled or the site is excluded, we only need to know
-                    // whether the page action needs to be shown or not.
-                    if (!options.extensionEnabled || isExcludedSite()) {
-                        return;
-                    }
-
-                    link.addClass('hoverZoomLink');
-
-                    // Convert URL special characters
-                    /*var srcs = linkData.hoverZoomSrc;
-                     for (var i=0; i<srcs.length; i++) {
-                     srcs[i] = deepUnescape(srcs[i]);
-                     }
-                     linkData.hoverZoomSrc = srcs;*/
-                    if (linkData.hoverZoomGallerySrc) {
-                        if (!linkData.hoverZoomGalleryIndex)
-                            linkData.hoverZoomGalleryIndex = 0;
-                        linkData.hoverZoomGallerySrc = linkData.hoverZoomGallerySrc.map(function (srcs) {
-                            return srcs.map(deepUnescape);
-                        });
-                        updateImageFromGallery(link);
-                    } else {
-                        linkData.hoverZoomSrc = linkData.hoverZoomSrc.map(deepUnescape);
-                    }
-
-                    linkData.hoverZoomSrcIndex = 0;
-
-                    // Caption
-                    if (options.showCaptions && !options.ambilightEnabled && !linkData.hoverZoomCaption) {
-                        prepareImgCaption(link);
-                    }
-                }
-            });
-
-            if (options.pageActionEnabled && !pageActionShown && showPageAction) {
-                chrome.runtime.sendMessage({action:'showPageAction'});
-                pageActionShown = true;
-            }
-        }
-
         function prepareImgLinks() {
             if (debug) {
                 console.time('prepareImgLinks');
@@ -879,11 +782,7 @@ console.log($("#hoverHideTemp"));
 
             for (var i = 0; i < hoverZoomPlugins.length; i++) {
                 if (!options.disabledPlugins.includes(hoverZoomPlugins[i].name.replace(/[^\w]/g, '').toLowerCase()))
-                if (hoverZoomPlugins[i].name === 'fetlife') {
-                    hoverZoomPlugins[i].prepareImgLinks(imgLinksPreparedFL);
-                } else {
                     hoverZoomPlugins[i].prepareImgLinks(imgLinksPrepared);
-                }
             }
             prepareImgLinksTimeout = null;
 
@@ -1393,6 +1292,20 @@ console.log($("#hoverHideTemp"));
 
         chrome.runtime.onMessage.addListener(onMessage);
         loadOptions();
+
+        // In case we are being used on a website that removes us from the DOM, update the internal data structure to reflect this
+        var target = document.getElementsByTagName('html')[0];
+        var obs = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) { 
+                if (mutation.removedNodes.length > 0) {
+                    if (mutation.removedNodes[0].querySelector('#hzImg')) {
+                        hoverZoom.hzImg = false;
+                    }
+                }
+            });
+        });
+        config = {attributes: true, childList: true, characterData: true};
+        obs.observe(target, config);
     },
 
     // __________________________________________________________________
@@ -1413,46 +1326,6 @@ console.log($("#hoverHideTemp"));
             if (!url) {
                 return;
             }
-            thumbUrl = url;
-            if (Array.isArray(search)) {
-                for (var i = 0; i < search.length; i++) {
-                    url = url.replace(search[i], replace[i]);
-                }
-            } else {
-                url = url.replace(search, replace);
-            }
-            url = unescape(url);
-            if (thumbUrl == url) {
-                return;
-            }
-            var data = link.data().hoverZoomSrc;
-            if (Object.prototype.toString.call(data) === '[object Array]') {
-                data.unshift(url);
-            } else {
-                data = [url];
-            }
-            link.data().hoverZoomSrc = data;
-            res.push(link);
-        });
-    },
-	
-	// Search for links or images using the 'filter' parameter,
-    // process their src or href attribute using the 'search' and 'replace' values,
-	// removing any tokenized querystring parameters, 
-    // store the result in the link and add the link to the 'res' array.
-    urlReplaceAndRemoveTokens:function (res, filter, search, replace, parentFilter) {
-        $(filter).each(function () {
-            var _this = $(this), link, url, thumbUrl;
-            if (parentFilter) {
-                link = _this.parents(parentFilter);
-            } else {
-                link = _this;
-            }
-            url = hoverZoom.getThumbUrl(this);
-            if (!url) {
-                return;
-            }
-			url = url.split('?')[0];
             thumbUrl = url;
             if (Array.isArray(search)) {
                 for (var i = 0; i < search.length; i++) {
