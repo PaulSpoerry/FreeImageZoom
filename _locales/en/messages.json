@@ -43,6 +43,34 @@
       "description": "[options] Save button label",
       "message": "Save"
    },
+   "optCaptionLocation": {
+      "description": "[options] Adjust the position of the caption",
+      "message": "Caption position:"
+   },
+   "optCaptionLocationAbove": {
+      "description": "[options] Caption location option to put captions above the image",
+      "message": "Above"
+   },
+   "optCaptionLocationBelow": {
+      "description": "[options] Caption location option to put captions below the image",
+      "message": "Below"
+   },
+   "optCaptionLocationNone": {
+      "description": "[options] Caption location option to disable captions",
+      "message": "None"
+   },
+   "optCaptionLocationTooltip": {
+      "description": "[options] Tooltip for adjusting the position of the caption",
+      "message": "View the caption above/below the image, or not at all"
+   },
+   "optCenterImages": {
+      "description": "[options] Center images in the middle of the page option",
+      "message": "Center images"
+   },
+   "optCenterImagesTooltip": {
+      "description": "[options] Tooltip for center images in the middle of the page option",
+      "message": "Center images as opposed to having them follow the cursor"
+   },
    "optDisableMouseWheelForVideo": {
       "description": "[options] Allows you to scroll through albums with the mousewheel but does not change behavior of GFY/Videos",
       "message": "Don't use mousewheel to navigate within video (action keys will still work)"
@@ -69,7 +97,7 @@
    },
    "optEnableAmbilightTooltip": {
       "description": "[options] Tooltip for enable ambient light behind images option",
-      "message": "Create a subtle glow effect similar to Phillips Ambilight technology."
+      "message": "Create a subtle glow effect similar to Phillips Ambilight technology"
    },
    "optEnableGalleries": {
       "description": "[options] Enable albums support option",
@@ -247,14 +275,6 @@
       "description": "[options] Page section for view options",
       "message": "View"
    },
-   "optShowCaptions": {
-      "description": "[options] Show pictures captions option",
-      "message": "Show picture captions"
-   },
-   "optShowCaptionsTooltip": {
-      "description": "[options] Tooltip for show pictures captions option",
-      "message": "Captions will be shown only when available"
-   },
    "optShowHighRes": {
       "description": "[options] Show high resolution pictures when available option",
       "message": "Show high resolution pictures when available"
@@ -355,14 +375,14 @@
       "description": "[popup] Allow per-site extension configuration",
       "message": "Allow per-site extension configuration"
    },
-    "popDisableForAllSites":{
+   "popDisableForAllSites": {
       "description": "[popup] Disable the extension",
       "message": "Disable for all sites"
-    },
+   },
    "popDisableForSite": {
       "description": "[popup] Disables the extension for a specific site",
       "message": "Disable for $1"
-    },
+   },
    "popEnableForSite": {
       "description": "[popup] Enables the extension for a specific site",
       "message": "Enable for $1"
@@ -370,13 +390,13 @@
    "popMoreOptions": {
       "description": "[popup] More options",
       "message": "More options"
-    },
-    "popPreloadImages":{
+   },
+   "popPreloadImages": {
       "description": "[popup] Preload zoomed images",
       "message": "Preload zoomed images"
-    },
-    "popPreloadingImages":{
+   },
+   "popPreloadingImages": {
       "description": "[popup] Preloading zoomed images",
       "message": "Preloading..."
-    }
+   }
 }
